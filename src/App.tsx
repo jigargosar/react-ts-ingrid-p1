@@ -29,6 +29,30 @@ class NodeModel {
   }
 }
 
+class Store {
+  @observable nodeList: NodeModel[]
+  @observable selectedId: Option<string>
+
+  constructor(nodeList: NodeModel[], selectedId: Option<string>) {
+    this.nodeList = nodeList
+    this.selectedId = selectedId
+  }
+
+  setSelectedId(sid: string) {
+    this.selectedId = some(sid)
+  }
+}
+
+function getInitialState(): Store {
+  const nodeList = makeBy(10, () => new NodeModel())
+  return new Store(nodeList, head(nodeList).map(_ => _.id))
+}
+
+function useAppStore() {
+  const [store] = useState(getInitialState)
+  return store
+}
+
 type NodeListItemProps = {
   node: NodeModel
   isSelected: boolean
@@ -71,27 +95,8 @@ const NodeList = observer(({ store }: NodeListProps) => (
   </div>
 ))
 
-class Store {
-  @observable nodeList: NodeModel[]
-  @observable selectedId: Option<string>
-
-  constructor(nodeList: NodeModel[], selectedId: Option<string>) {
-    this.nodeList = nodeList
-    this.selectedId = selectedId
-  }
-
-  setSelectedId(sid: string) {
-    this.selectedId = some(sid)
-  }
-}
-
-function getInitialState(): Store {
-  const nodeList = makeBy(10, () => new NodeModel())
-  return new Store(nodeList, head(nodeList).map(_ => _.id))
-}
-
 const App = observer(() => {
-  const [store] = useState(getInitialState)
+  const store = useAppStore()
 
   return (
     <div className="min-vh-100">
