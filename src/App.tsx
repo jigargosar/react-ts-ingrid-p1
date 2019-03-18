@@ -85,16 +85,21 @@ function getCached(key: string) {
   })
 }
 
-type State = {
+class State {
   nodeList: NodeModel[]
   selectedId: Option<string>
+
+  constructor(nodeList: NodeModel[], selectedId: Option<string>) {
+    this.nodeList = nodeList
+    this.selectedId = selectedId
+  }
 }
 
 type Effects = { setSelectedId: (nodeId: string) => void }
 
 function getInitialState(): State {
   const nodeList = makeBy(10, () => new NodeModel())
-  return { nodeList, selectedId: head(nodeList).map(_ => _.id) }
+  return new State(nodeList, head(nodeList).map(_ => _.id))
 }
 
 type SetState = Dispatch<SetStateAction<State>>
