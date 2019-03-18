@@ -9,11 +9,11 @@ import { Option, some } from 'fp-ts/lib/Option'
 
 export class NodeModel {
   @observable private readonly _id: string
-  @observable private readonly _title: string
+  @observable title: string
 
   private constructor() {
     this._id = `id_${nanoid()}`
-    this._title = faker.name.lastName()
+    this.title = faker.name.lastName()
   }
 
   get id() {
@@ -21,7 +21,7 @@ export class NodeModel {
   }
 
   get displayTitle() {
-    return this._title
+    return this.title
   }
 
   static createNew() {
