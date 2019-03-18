@@ -8,7 +8,7 @@ import { Option, some } from 'fp-ts/lib/Option'
 // configure({ enforceActions: 'always', computedRequiresReaction: true })
 
 export class NodeModel {
-  @observable private readonly _id: string
+  @observable readonly _id: string
   @observable title: string
   @observable childIds: string[]
   @observable collapsed: boolean
