@@ -3,7 +3,7 @@ import faker from 'faker'
 import nanoid from 'nanoid'
 import { times } from 'ramda'
 
-class Node {
+class NodeModel {
   private readonly _id: string
   private _title: string
   constructor() {
@@ -24,7 +24,7 @@ class Node {
   }
 }
 
-function NodeView({ node }: { node: Node }) {
+function NodeListItem({ node }: { node: NodeModel }) {
   return (
     <div className="ph3 pv2 br2 hover-bg-black-10">
       {node.displayTitle}
@@ -33,12 +33,12 @@ function NodeView({ node }: { node: Node }) {
 }
 
 function App() {
-  const nodeList = times(() => new Node(), 10)
+  const nodeList = times(() => new NodeModel(), 10)
 
   return (
     <div className="min-vh-100">
       {nodeList.map(node => (
-        <NodeView key={node.id} node={node} />
+        <NodeListItem key={node.id} node={node} />
       ))}
     </div>
   )
