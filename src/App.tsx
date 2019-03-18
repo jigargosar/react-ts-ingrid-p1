@@ -32,7 +32,7 @@ function NodeListItem({ node }: { node: NodeModel }) {
   )
 }
 
-function NodeList(props: { nodeList: NodeModel[] }) {
+function NodeList(props: { nodeList: NodeModel[]; selectedId: string }) {
   const { nodeList } = props
   return (
     <>
@@ -45,10 +45,11 @@ function NodeList(props: { nodeList: NodeModel[] }) {
 
 function App() {
   const nodeList = times(() => new NodeModel(), 10)
+  const selectedId = nodeList[0].id
 
   return (
     <div className="min-vh-100">
-      <NodeList nodeList={nodeList} />
+      <NodeList nodeList={nodeList} selectedId={selectedId} />
     </div>
   )
 }
