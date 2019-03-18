@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import faker from 'faker'
 import nanoid from 'nanoid'
 import { head, makeBy } from 'fp-ts/lib/Array'
-import { Option } from 'fp-ts/lib/Option'
+import { Option, some } from 'fp-ts/lib/Option'
 import cn from 'classnames'
 
 class NodeModel {
@@ -27,9 +27,17 @@ class NodeModel {
   }
 }
 
-type NodeListItemProps = { node: NodeModel; isSelected: boolean }
+type NodeListItemProps = {
+  node: NodeModel
+  isSelected: boolean
+  setSelectedNodeId: (nodeId: string) => void
+}
 
-function NodeListItem({ node, isSelected }: NodeListItemProps) {
+function NodeListItem({
+  node,
+  isSelected,
+  setSelectedNodeId,
+}: NodeListItemProps) {
   return (
     <div
       className={cn(
@@ -37,22 +45,36 @@ function NodeListItem({ node, isSelected }: NodeListItemProps) {
         isSelected ? 'bg-blue white hover-white-80' : 'hover-bg-black-10',
       )}
       tabIndex={isSelected ? 0 : -1}
+      onFocus={() => setSelectedNodeId(node.id)}
     >
       {node.displayTitle}
     </div>
   )
 }
 
-type NodeListProps = { nodeList: NodeModel[]; selectedId: Option<string> }
+type NodeListProps = {
+  nodeList: NodeModel[]
+  selectedId: Option<string>
+  setSelectedNodeId: (nodeId: string) => void
+}
 
-function NodeList({ nodeList, selectedId }: NodeListProps) {
+function NodeList({
+  nodeList,
+  selectedId,
+  setSelectedNodeId,
+}: NodeListProps) {
   return (
     <div className="pa3">
       {nodeList.map(node => {
         const selected = selectedId.toUndefined() === node.id
 
         return (
-          <NodeListItem key={node.id} node={node} isSelected={selected} />
+          <NodeListItem
+            key={node.id}
+            node={node}
+            isSelected={selected}
+            setSelectedNodeId={setSelectedNodeId}
+          />
         )
       })}
     </div>
@@ -63,11 +85,18 @@ function App() {
   const nodeList = makeBy(10, () => new NodeModel())
 
   const maybeFirst = head(nodeList)
-  const selectedId = maybeFirst.map(_ => _.id)
+
+  const [selectedId, setSelectedNodeId] = useState(() =>
+    maybeFirst.map(_ => _.id),
+  )
 
   return (
     <div className="min-vh-100">
-      <NodeList nodeList={nodeList} selectedId={selectedId} />
+      <NodeList
+        nodeList={nodeList}
+        selectedId={selectedId}
+        setSelectedNodeId={id => setSelectedNodeId(some(id))}
+      />
     </div>
   )
 }
