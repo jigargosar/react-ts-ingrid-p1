@@ -1,6 +1,36 @@
-import { observer, useObservable } from 'mobx-react-lite'
-import React, { useEffect } from 'react'
+import { observer } from 'mobx-react-lite'
+import React, { useEffect, useState } from 'react'
 import cn from 'classnames'
+import { observable } from 'mobx'
+
+class DnDState {
+  @observable di: any = null
+  @observable px = 0
+  @observable py = 0
+}
+
+type DnDItemProps = {
+  state: DnDState
+  item: any
+  children: React.ReactNode
+}
+
+function DnDItem({ state, item, children }: DnDItemProps) {
+  return (
+    <div
+      className={cn({ 'o-30': item === state.di })}
+      onMouseDown={e => {
+        e.persist()
+        console.log(`e`, e)
+        state.di = item
+        state.px = e.pageX
+        state.py = e.pageY
+      }}
+    >
+      {children}
+    </div>
+  )
+}
 
 export const DnDList = observer(
   ({
@@ -10,7 +40,7 @@ export const DnDList = observer(
     list: any[]
     renderItem: (item: any, idx: number) => React.ReactNode
   }) => {
-    const state = useObservable({ di: null, px: 0, py: 0 })
+    const [state] = useState(() => new DnDState())
 
     useEffect(() => {
       function mouseUpListener(e: MouseEvent) {
@@ -37,19 +67,12 @@ export const DnDList = observer(
       <div className={cn('relative', { 'us-none': isDragging })}>
         {list.map((item, idx) => {
           return (
-            <div
-              className={cn({ 'o-30': item === state.di })}
-              onMouseDown={e => {
-                e.persist()
-                console.log(`e`, e)
-                state.di = item
-                state.px = e.pageX
-                state.py = e.pageY
-              }}
+            <DnDItem
               key={idx}
-            >
-              {renderItem(item, idx)}
-            </div>
+              item={item}
+              state={state}
+              children={renderItem(item, idx)}
+            />
           )
         })}
         {isDragging && (
