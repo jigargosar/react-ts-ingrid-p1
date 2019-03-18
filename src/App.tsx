@@ -30,14 +30,10 @@ class NodeModel {
 type NodeListItemProps = {
   node: NodeModel
   isSelected: boolean
-  setSelectedId: (nodeId: string) => void
+  effects: Effects
 }
 
-function NodeListItem({
-  node,
-  isSelected,
-  setSelectedId,
-}: NodeListItemProps) {
+function NodeListItem({ node, isSelected, effects }: NodeListItemProps) {
   return (
     <div
       className={cn(
@@ -45,7 +41,7 @@ function NodeListItem({
         isSelected ? 'bg-blue white hover-white-80' : 'hover-bg-black-10',
       )}
       tabIndex={isSelected ? 0 : -1}
-      onFocus={() => setSelectedId(node.id)}
+      onFocus={() => effects.setSelectedId(node.id)}
     >
       {node.displayTitle}
     </div>
@@ -55,10 +51,12 @@ function NodeListItem({
 type NodeListProps = {
   nodeList: NodeModel[]
   selectedId: Option<string>
-  setSelectedId: (nodeId: string) => void
+  effects: Effects
 }
 
-function NodeList({ nodeList, selectedId, setSelectedId }: NodeListProps) {
+type Effects = { setSelectedId: (nodeId: string) => void }
+
+function NodeList({ nodeList, selectedId, effects }: NodeListProps) {
   return (
     <div className="pa3">
       {nodeList.map(node => {
@@ -69,7 +67,7 @@ function NodeList({ nodeList, selectedId, setSelectedId }: NodeListProps) {
             key={node.id}
             node={node}
             isSelected={selected}
-            setSelectedId={setSelectedId}
+            effects={effects}
           />
         )
       })}
@@ -117,7 +115,7 @@ function App() {
       <NodeList
         nodeList={state.nodeList}
         selectedId={state.selectedId}
-        setSelectedId={effects.setSelectedId}
+        effects={effects}
       />
     </div>
   )
