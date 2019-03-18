@@ -3,15 +3,15 @@ import faker from 'faker'
 import nanoid from 'nanoid'
 
 class Node {
-  get id(): string {
-    return this._id
-  }
-  private _title: string
   private readonly _id: string
-
+  private _title: string
   constructor() {
     this._id = `id_${nanoid()}`
     this._title = faker.name.lastName()
+  }
+
+  get id() {
+    return this._id
   }
 
   set title(value: string) {
