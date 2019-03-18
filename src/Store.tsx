@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { action, configure, observable } from 'mobx'
+import { action, observable } from 'mobx'
 import nanoid from 'nanoid'
 import faker from 'faker'
 import { head, makeBy } from 'fp-ts/lib/Array'
 import { Option, some } from 'fp-ts/lib/Option'
 
-configure({ enforceActions: 'always', computedRequiresReaction: true })
+// configure({ enforceActions: 'always', computedRequiresReaction: true })
 
 export class NodeModel {
   @observable private readonly _id: string

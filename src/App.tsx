@@ -1,6 +1,6 @@
 import React from 'react'
 import cn from 'classnames'
-import { observer } from 'mobx-react-lite'
+import { observer, useObservable } from 'mobx-react-lite'
 import { NodeModel, Store, useAppStore } from './Store'
 
 type NodeListItemProps = {
@@ -45,12 +45,22 @@ const DnDList = observer(
     list: any[]
     renderItem: (item: any, idx: number) => React.ReactNode
   }) => {
+    const state = useObservable({ di: null })
+
     return (
-      <>
+      <div onMouseUp={() => (state.di = null)}>
         {list.map((item, idx) => {
-          return <div key={idx}>{renderItem(item, idx)}</div>
+          return (
+            <div
+              className={cn({ dn: item === state.di })}
+              onMouseDown={() => (state.di = item)}
+              key={idx}
+            >
+              {renderItem(item, idx)}
+            </div>
+          )
         })}
-      </>
+      </div>
     )
   },
 )
