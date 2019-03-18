@@ -2,7 +2,6 @@ import React from 'react'
 import cn from 'classnames'
 import { observer } from 'mobx-react-lite'
 import { NodeModel, Store, useAppStore } from './Store'
-import { DnDList } from './comp/DnDList'
 
 type NodeListItemProps = {
   node: NodeModel
@@ -31,10 +30,9 @@ type NodeListProps = {
 
 const NodeList = observer(({ store }: NodeListProps) => (
   <div className="pa3">
-    <DnDList
-      list={store.nodeList}
-      renderItem={node => <NodeListItem node={node} store={store} />}
-    />
+    {store.nodeList.map(node => (
+      <NodeListItem node={node} store={store} />
+    ))}
   </div>
 ))
 
