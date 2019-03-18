@@ -5,9 +5,10 @@ import { head, makeBy } from 'fp-ts/lib/Array'
 import { fromNullable, Option, some } from 'fp-ts/lib/Option'
 import cn from 'classnames'
 import { observer } from 'mobx-react-lite'
+import { observable } from 'mobx'
 
 class NodeModel {
-  private readonly _id: string
+  @observable private readonly _id: string
   private _title: string
 
   constructor() {
