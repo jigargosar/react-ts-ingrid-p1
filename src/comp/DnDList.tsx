@@ -13,7 +13,11 @@ class DnDState {
     return !!this._di
   }
   isDraggingItem(item: any) {
-    return this._di === item
+    return this.isDraggingAny && this._di === item
+  }
+
+  isDraggedOver(item: any) {
+    return this.isDraggingAny && this._overItem === item
   }
 
   startDraggingItem(item: any) {
@@ -34,17 +38,19 @@ class DnDState {
   draggableHandlersForItem(item: any) {
     return {
       onMouseDown: (e: React.MouseEvent) => {
-        if (!this.isDraggingAny) return
+        if (this.isDraggingAny) return
         e.persist()
         console.log(`e`, e)
         this.startDraggingItem(item)
         this.px = e.pageX
         this.py = e.pageY
       },
-      onMouseEnter: (e: React.MouseEvent) => {
+      onMouseMove: (e: React.MouseEvent) => {
+        if (!this.isDraggingAny) return
         this._overItem = item
       },
       onMouseLeave: (e: React.MouseEvent) => {
+        if (!this.isDraggingAny) return
         if (this._overItem === item) {
           this._overItem = null
         }
@@ -61,10 +67,14 @@ type DnDItemProps = {
 
 function DnDItem({ state, item, children }: DnDItemProps) {
   const isBeingDragged = state.isDraggingItem(item)
+  const isBeingDraggedOver = state.isDraggedOver(item)
 
   return (
     <div
-      className={cn({ 'o-30': isBeingDragged })}
+      className={cn(
+        { 'o-30': isBeingDragged },
+        { 'bb b--red': isBeingDraggedOver },
+      )}
       {...state.draggableHandlersForItem(item)}
     >
       {children}
