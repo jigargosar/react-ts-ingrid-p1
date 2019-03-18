@@ -4,6 +4,7 @@ import nanoid from 'nanoid'
 import { head, makeBy } from 'fp-ts/lib/Array'
 import { fromNullable, Option, some } from 'fp-ts/lib/Option'
 import cn from 'classnames'
+import { observer } from 'mobx-react-lite'
 
 class NodeModel {
   private readonly _id: string
@@ -113,7 +114,7 @@ function useActions(setState: SetState) {
   }, [])
 }
 
-function App() {
+const App = observer(() => {
   const [state, setState] = useState(getInitialState)
 
   const effects = useActions(setState)
@@ -123,6 +124,6 @@ function App() {
       <NodeList state={state} effects={effects} />
     </div>
   )
-}
+})
 
 export default App
