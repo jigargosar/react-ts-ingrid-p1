@@ -49,12 +49,14 @@ function NodeListItem({ node, isSelected, effects }: NodeListItemProps) {
 }
 
 type NodeListProps = {
-  nodeList: NodeModel[]
-  selectedId: Option<string>
+  state: State
   effects: Effects
 }
 
-function NodeList({ nodeList, selectedId, effects }: NodeListProps) {
+function NodeList({
+  state: { nodeList, selectedId },
+  effects,
+}: NodeListProps) {
   return (
     <div className="pa3">
       {nodeList.map(node => {
@@ -118,11 +120,7 @@ function App() {
 
   return (
     <div className="min-vh-100">
-      <NodeList
-        nodeList={state.nodeList}
-        selectedId={state.selectedId}
-        effects={effects}
-      />
+      <NodeList state={state} effects={effects} />
     </div>
   )
 }
