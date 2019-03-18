@@ -24,8 +24,9 @@ class NodeModel {
   }
 }
 
-function NodeListItem(props: { node: NodeModel; isSelected: boolean }) {
-  const { node, isSelected } = props
+type NodeListItemProps = { node: NodeModel; isSelected: boolean }
+
+function NodeListItem({ node, isSelected }: NodeListItemProps) {
   return (
     <div className="ph3 pv2 br2 hover-bg-black-10">
       {node.displayTitle}
