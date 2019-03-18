@@ -32,10 +32,7 @@ function NodeListItem({ node }: { node: NodeModel }) {
   )
 }
 
-function NodeList(props: {
-  nodeList: NodeModel[]
-  selectedId: string | undefined
-}) {
+function NodeList(props: { nodeList: NodeModel[]; selectedId?: string }) {
   const { nodeList } = props
   return (
     <>
