@@ -4,9 +4,31 @@ import cn from 'classnames'
 import { observable } from 'mobx'
 
 class DnDState {
-  @observable di: any = null
+  @observable _di: any = null
   @observable px = 0
   @observable py = 0
+
+  get isDraggingAny() {
+    return !!this._di
+  }
+  isDraggingItem(item: any) {
+    return this._di === item
+  }
+
+  startDraggingItem(item: any) {
+    this._di = item
+  }
+
+  stopDragging() {
+    this._di = null
+  }
+
+  get draggedItem() {
+    if (!this.isDraggingAny) {
+      throw new Error('Not Dragging Any')
+    }
+    return this._di
+  }
 }
 
 type DnDItemProps = {
@@ -16,13 +38,14 @@ type DnDItemProps = {
 }
 
 function DnDItem({ state, item, children }: DnDItemProps) {
+  const isBeingDragged = state.isDraggingItem(item)
   return (
     <div
-      className={cn({ 'o-30': item === state.di })}
+      className={cn({ 'o-30': isBeingDragged })}
       onMouseDown={e => {
         e.persist()
         console.log(`e`, e)
-        state.di = item
+        state.startDraggingItem(item)
         state.px = e.pageX
         state.py = e.pageY
       }}
@@ -44,11 +67,11 @@ export const DnDList = observer(
 
     useEffect(() => {
       function mouseUpListener(e: MouseEvent) {
-        state.di = null
+        state.stopDragging()
       }
 
       function mouseMoveListener(e: MouseEvent) {
-        if (state.di) {
+        if (state.isDraggingAny) {
           state.px = e.pageX
           state.py = e.pageY
         }
@@ -62,9 +85,8 @@ export const DnDList = observer(
       }
     }, [])
 
-    const isDragging = !!state.di
     return (
-      <div className={cn('relative', { 'us-none': isDragging })}>
+      <div className={cn('relative', { 'us-none': state.isDraggingAny })}>
         {list.map((item, idx) => {
           return (
             <DnDItem
@@ -75,12 +97,12 @@ export const DnDList = observer(
             />
           )
         })}
-        {isDragging && (
+        {state.isDraggingAny && (
           <div
             className="absolute"
             style={{ left: state.px, top: state.py }}
           >
-            {renderItem(state.di, -1)}
+            {renderItem(state.draggedItem, -1)}
           </div>
         )}
       </div>
