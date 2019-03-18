@@ -1,7 +1,7 @@
 import React from 'react'
 import faker from 'faker'
 import nanoid from 'nanoid'
-import { times } from 'ramda'
+import { head, times } from 'ramda'
 
 class NodeModel {
   private readonly _id: string
@@ -32,7 +32,10 @@ function NodeListItem({ node }: { node: NodeModel }) {
   )
 }
 
-function NodeList(props: { nodeList: NodeModel[]; selectedId: string }) {
+function NodeList(props: {
+  nodeList: NodeModel[]
+  selectedId: string | undefined
+}) {
   const { nodeList } = props
   return (
     <>
@@ -45,7 +48,9 @@ function NodeList(props: { nodeList: NodeModel[]; selectedId: string }) {
 
 function App() {
   const nodeList = times(() => new NodeModel(), 10)
-  const selectedId = nodeList[0].id
+
+  const maybeFirst = head(nodeList)
+  const selectedId = maybeFirst ? maybeFirst.id : maybeFirst
 
   return (
     <div className="min-vh-100">

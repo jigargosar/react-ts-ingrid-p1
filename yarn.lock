@@ -1729,7 +1729,7 @@ babel-plugin-jest-hoist@^23.2.0:
   resolved "https://registry.yarnpkg.com/babel-plugin-jest-hoist/-/babel-plugin-jest-hoist-23.2.0.tgz#e61fae05a1ca8801aadee57a6d66b8cefaf44167"
   integrity sha1-5h+uBaHKiAGq3uV6bWa4zvr0QWc=
 
-babel-plugin-macros@2.5.0:
+babel-plugin-macros@2.5.0, babel-plugin-macros@^2.4.2:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-macros/-/babel-plugin-macros-2.5.0.tgz#01f4d3b50ed567a67b80a30b9da066e94f4097b6"
   integrity sha512-BWw0lD0kVZAXRD3Od1kMrdmfudqzDzYv2qrN3l2ISR1HVp1EgLKfbOrYV9xmY5k3qx3RIu5uPAUZZZHpo0o5Iw==
@@ -4730,6 +4730,13 @@ identity-obj-proxy@3.0.0:
   integrity sha1-lNK9qWCERT7zb7xarsN+D3nx/BQ=
   dependencies:
     harmony-reflect "^1.4.6"
+
+idx.macro@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/idx.macro/-/idx.macro-3.0.4.tgz#b200f5329f73418caf6a3ac5740882ab4bbd530c"
+  integrity sha512-P9MncgFl8aNwA0uvgvYoIUbBAMPrlAiMKYEmI54Mx+AY/O+NmOWN+Q7dhCdoOpEMVpUBUDooptHSJO1IdLczow==
+  dependencies:
+    babel-plugin-macros "^2.4.2"
 
 ieee754@^1.1.4:
   version "1.1.12"
