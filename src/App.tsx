@@ -9,7 +9,7 @@ import { observable } from 'mobx'
 
 class NodeModel {
   @observable private readonly _id: string
-  private _title: string
+  @observable private _title: string
 
   constructor() {
     this._id = `id_${nanoid()}`
