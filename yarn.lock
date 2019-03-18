@@ -1729,7 +1729,7 @@ babel-plugin-jest-hoist@^23.2.0:
   resolved "https://registry.yarnpkg.com/babel-plugin-jest-hoist/-/babel-plugin-jest-hoist-23.2.0.tgz#e61fae05a1ca8801aadee57a6d66b8cefaf44167"
   integrity sha1-5h+uBaHKiAGq3uV6bWa4zvr0QWc=
 
-babel-plugin-macros@2.5.0, babel-plugin-macros@^2.4.2:
+babel-plugin-macros@2.5.0, babel-plugin-macros@^2.4.2, babel-plugin-macros@^2.4.5:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-macros/-/babel-plugin-macros-2.5.0.tgz#01f4d3b50ed567a67b80a30b9da066e94f4097b6"
   integrity sha512-BWw0lD0kVZAXRD3Od1kMrdmfudqzDzYv2qrN3l2ISR1HVp1EgLKfbOrYV9xmY5k3qx3RIu5uPAUZZZHpo0o5Iw==
@@ -7087,6 +7087,13 @@ param-case@2.1.x:
   integrity sha1-35T9jPZTHs915r75oIWPvHK+Ikc=
   dependencies:
     no-case "^2.2.0"
+
+param.macro@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/param.macro/-/param.macro-3.2.0.tgz#094d47dd3fa3af7f9b5b6cd6eab78d835e9901b6"
+  integrity sha512-yXZ1zqyEPXFXnepMxaAbM6xWOYiLMvY+SzCpwPKPdH1KnR7uU+KheioEx76Ejfqa/sliYB/nL9VYZ5Corhh8kw==
+  dependencies:
+    babel-plugin-macros "^2.4.5"
 
 parent-module@^1.0.0:
   version "1.0.0"
