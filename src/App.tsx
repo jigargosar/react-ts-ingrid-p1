@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import faker from 'faker'
 import nanoid from 'nanoid'
 import { head, makeBy } from 'fp-ts/lib/Array'
-import { fromNullable, Option, some } from 'fp-ts/lib/Option'
+import { Option, some } from 'fp-ts/lib/Option'
 import cn from 'classnames'
 import { observer } from 'mobx-react-lite'
 import { observable } from 'mobx'
@@ -70,17 +70,6 @@ const NodeList = observer(({ store }: NodeListProps) => (
     })}
   </div>
 ))
-
-function getCached(key: string) {
-  return fromNullable(localStorage.getItem(key)).map(str => {
-    try {
-      return JSON.parse(str)
-    } catch (e) {
-      console.error(e)
-      return null
-    }
-  })
-}
 
 class State {
   @observable nodeList: NodeModel[]
