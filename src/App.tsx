@@ -34,8 +34,9 @@ function NodeListItem({ node, isSelected }: NodeListItemProps) {
   )
 }
 
-function NodeList(props: { nodeList: NodeModel[]; selectedId?: string }) {
-  const { nodeList, selectedId } = props
+type NodeListProps = { nodeList: NodeModel[]; selectedId?: string }
+
+function NodeList({ nodeList, selectedId }: NodeListProps) {
   return (
     <div className="pa3">
       {nodeList.map(node => (
