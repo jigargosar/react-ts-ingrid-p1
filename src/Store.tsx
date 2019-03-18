@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { action, observable } from 'mobx'
+import { action, observable, values } from 'mobx'
 import nanoid from 'nanoid'
 import faker from 'faker'
 
@@ -53,6 +53,7 @@ export class Store {
     this.selectedId = NodeModel.rootNodeId
     this.registerNode(NodeModel.getOrCreateRootNode())
     this.appendNewChild()
+    this.attemptGoUp()
     this.appendNewChild()
     this.getById = this.getById.bind(this)
   }
@@ -89,6 +90,27 @@ export class Store {
     this.registerNode(newNode)
     this.selectedNode.appendChildId(newNode.id)
     this.setSelectedId(newNode.id)
+  }
+
+  @action.bound
+  attemptGoUp() {
+    const parentId = this.getParentIdOf(this.selectedNode)
+    if (parentId) {
+      this.setSelectedId(parentId)
+    }
+  }
+
+  get idToPidLookup() {
+    return values(this.byId).reduce((acc, node) => {
+      node.childIds.forEach((cid: string) => {
+        acc[cid] = node.id
+      })
+      return acc
+    }, {})
+  }
+
+  private getParentIdOf(node: NodeModel) {
+    return this.idToPidLookup[node.id]
   }
 
   isNodeSelected(node: NodeModel) {
