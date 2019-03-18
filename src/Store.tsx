@@ -9,7 +9,7 @@ configure({ enforceActions: 'always', computedRequiresReaction: true })
 
 export class NodeModel {
   @observable private readonly _id: string
-  @observable private _title: string
+  @observable private readonly _title: string
 
   constructor() {
     this._id = `id_${nanoid()}`
@@ -18,10 +18,6 @@ export class NodeModel {
 
   get id() {
     return this._id
-  }
-
-  setTitle(value: string) {
-    this._title = value
   }
 
   get displayTitle() {
