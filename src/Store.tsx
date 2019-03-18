@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { action, observable } from 'mobx'
 import nanoid from 'nanoid'
 import faker from 'faker'
-import { makeBy } from 'fp-ts/lib/Array'
 
 // configure({ enforceActions: 'always', computedRequiresReaction: true })
 
@@ -49,10 +48,8 @@ export class NodeModel {
 
 export class Store {
   @observable byId: { [index: string]: NodeModel } = {}
-  @observable nodeList: NodeModel[]
   @observable selectedId: string
-  private constructor(nodeList: NodeModel[]) {
-    this.nodeList = nodeList
+  private constructor() {
     this.selectedId = NodeModel.rootNodeId
     this.registerNode(NodeModel.getOrCreateRootNode())
     this.appendNewChild()
@@ -100,8 +97,7 @@ export class Store {
 
   @action
   static create(): Store {
-    const nodeList = makeBy(10, NodeModel.createNew)
-    return new Store(nodeList)
+    return new Store()
   }
 }
 
