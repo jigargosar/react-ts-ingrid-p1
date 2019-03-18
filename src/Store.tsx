@@ -50,8 +50,12 @@ export class Store {
   private constructor(nodeList: NodeModel[], selectedId: Option<string>) {
     this.nodeList = nodeList
     this.selectedId = selectedId
-    const rootNode = NodeModel.getOrCreateRootNode()
-    this.byId[rootNode.id] = rootNode
+    this.registerNode(NodeModel.getOrCreateRootNode())
+  }
+
+  @action.bound
+  private registerNode(node: NodeModel) {
+    this.byId[node.id] = node
   }
 
   @action.bound
