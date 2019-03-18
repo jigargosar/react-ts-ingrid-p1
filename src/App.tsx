@@ -34,8 +34,8 @@ type NodeListItemProps = {
   effects: Effects
 }
 
-function NodeListItem({ node, isSelected, effects }: NodeListItemProps) {
-  return (
+const NodeListItem = observer(
+  ({ node, isSelected, effects }: NodeListItemProps) => (
     <div
       className={cn(
         'ph3 pv2 br2',
@@ -46,19 +46,16 @@ function NodeListItem({ node, isSelected, effects }: NodeListItemProps) {
     >
       {node.displayTitle}
     </div>
-  )
-}
+  ),
+)
 
 type NodeListProps = {
   state: State
   effects: Effects
 }
 
-function NodeList({
-  state: { nodeList, selectedId },
-  effects,
-}: NodeListProps) {
-  return (
+const NodeList = observer(
+  ({ state: { nodeList, selectedId }, effects }: NodeListProps) => (
     <div className="pa3">
       {nodeList.map(node => {
         const selected = selectedId.toUndefined() === node.id
@@ -73,8 +70,8 @@ function NodeList({
         )
       })}
     </div>
-  )
-}
+  ),
+)
 
 function getCached(key: string) {
   return fromNullable(localStorage.getItem(key)).map(str => {
