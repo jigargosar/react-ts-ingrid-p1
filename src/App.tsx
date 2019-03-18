@@ -102,8 +102,8 @@ function useActions(setState: SetState) {
   return useMemo(() => {
     return {
       setSelectedId(sid: string) {
-        setState((os: State) => ({
-          nodeList: os.nodeList,
+        setState(os => ({
+          ...os,
           selectedId: some(sid),
         }))
       },
