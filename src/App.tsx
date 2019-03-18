@@ -24,7 +24,8 @@ class NodeModel {
   }
 }
 
-function NodeListItem({ node }: { node: NodeModel }) {
+function NodeListItem(props: { node: NodeModel; isSelected: boolean }) {
+  const { node, isSelected } = props
   return (
     <div className="ph3 pv2 br2 hover-bg-black-10">
       {node.displayTitle}
@@ -33,11 +34,15 @@ function NodeListItem({ node }: { node: NodeModel }) {
 }
 
 function NodeList(props: { nodeList: NodeModel[]; selectedId?: string }) {
-  const { nodeList } = props
+  const { nodeList, selectedId } = props
   return (
     <div className="pa3">
       {nodeList.map(node => (
-        <NodeListItem key={node.id} node={node} />
+        <NodeListItem
+          key={node.id}
+          node={node}
+          isSelected={selectedId === node.id}
+        />
       ))}
     </div>
   )
