@@ -48,7 +48,7 @@ const DnDList = observer(
     const state = useObservable({ di: null })
 
     return (
-      <div onMouseUp={() => (state.di = null)}>
+      <div className="relative" onMouseUp={() => (state.di = null)}>
         {list.map((item, idx) => {
           return (
             <div
@@ -60,6 +60,11 @@ const DnDList = observer(
             </div>
           )
         })}
+        {state.di && (
+          <div className="absolute" style={{ top: 10, left: 10 }}>
+            renderItem(state.di, -1)
+          </div>
+        )}
       </div>
     )
   },
