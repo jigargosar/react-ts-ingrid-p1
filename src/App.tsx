@@ -1,6 +1,7 @@
 import React from 'react'
 import faker from 'faker'
 import nanoid from 'nanoid'
+import { times } from 'ramda'
 
 class Node {
   private readonly _id: string
@@ -14,7 +15,7 @@ class Node {
     return this._id
   }
 
-  set title(value: string) {
+  setTitle(value: string) {
     this._title = value
   }
 
@@ -23,10 +24,20 @@ class Node {
   }
 }
 
-function App() {
-  const rootNode = new Node()
+function NodeView({ node }: { node: Node }) {
+  return <div className="ph3 pv2">{node.displayTitle}</div>
+}
 
-  return <div className="min-vh-100">HW2</div>
+function App() {
+  const nodeList = times(() => new Node(), 10)
+
+  return (
+    <div className="min-vh-100">
+      {nodeList.map(node => (
+        <NodeView key={node.id} node={node} />
+      ))}
+    </div>
+  )
 }
 
 export default App
