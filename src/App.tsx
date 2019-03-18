@@ -2,14 +2,18 @@ import React from 'react'
 import faker from 'faker'
 
 class Node {
-  private title: string
+  private _title: string
 
   constructor() {
-    this.title = faker.name.lastName()
+    this._title = faker.name.lastName()
+  }
+
+  set title(value: string) {
+    this._title = value
   }
 
   get displayTitle() {
-    return this.title
+    return this._title
   }
 }
 
