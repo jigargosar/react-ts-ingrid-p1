@@ -54,8 +54,6 @@ const DnDList = observer(
   },
 )
 
-DnDList.displayName = 'DnDList'
-
 const App = observer(() => {
   const store = useAppStore()
 
