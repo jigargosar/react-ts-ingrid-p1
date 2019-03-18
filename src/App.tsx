@@ -30,13 +30,13 @@ class NodeModel {
 type NodeListItemProps = {
   node: NodeModel
   isSelected: boolean
-  setSelectedNodeId: (nodeId: string) => void
+  setSelectedId: (nodeId: string) => void
 }
 
 function NodeListItem({
   node,
   isSelected,
-  setSelectedNodeId,
+  setSelectedId,
 }: NodeListItemProps) {
   return (
     <div
@@ -45,7 +45,7 @@ function NodeListItem({
         isSelected ? 'bg-blue white hover-white-80' : 'hover-bg-black-10',
       )}
       tabIndex={isSelected ? 0 : -1}
-      onFocus={() => setSelectedNodeId(node.id)}
+      onFocus={() => setSelectedId(node.id)}
     >
       {node.displayTitle}
     </div>
@@ -55,14 +55,10 @@ function NodeListItem({
 type NodeListProps = {
   nodeList: NodeModel[]
   selectedId: Option<string>
-  setSelectedNodeId: (nodeId: string) => void
+  setSelectedId: (nodeId: string) => void
 }
 
-function NodeList({
-  nodeList,
-  selectedId,
-  setSelectedNodeId,
-}: NodeListProps) {
+function NodeList({ nodeList, selectedId, setSelectedId }: NodeListProps) {
   return (
     <div className="pa3">
       {nodeList.map(node => {
@@ -73,7 +69,7 @@ function NodeList({
             key={node.id}
             node={node}
             isSelected={selected}
-            setSelectedNodeId={setSelectedNodeId}
+            setSelectedId={setSelectedId}
           />
         )
       })}
@@ -86,7 +82,7 @@ function App() {
 
   const maybeFirst = head(nodeList)
 
-  const [selectedId, setSelectedNodeId] = useState(() =>
+  const [selectedId, setSelectedId] = useState(() =>
     maybeFirst.map(_ => _.id),
   )
 
@@ -95,7 +91,7 @@ function App() {
       <NodeList
         nodeList={nodeList}
         selectedId={selectedId}
-        setSelectedNodeId={id => setSelectedNodeId(some(id))}
+        setSelectedId={id => setSelectedId(some(id))}
       />
     </div>
   )
