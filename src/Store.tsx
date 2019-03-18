@@ -13,8 +13,8 @@ export class NodeModel {
   @observable childIds: string[]
   @observable collapsed: boolean
 
-  private constructor() {
-    this._id = `id_${nanoid()}`
+  constructor(id?: string) {
+    this._id = id || `id_${nanoid()}`
     this.title = faker.name.lastName()
     this.childIds = []
     this.collapsed = false
@@ -31,15 +31,27 @@ export class NodeModel {
   static createNew() {
     return new NodeModel()
   }
+
+  private static _rootNode: NodeModel
+
+  static getOrCreateRootNode() {
+    if (!NodeModel._rootNode) {
+      NodeModel._rootNode = new NodeModel('id_root_node')
+    }
+    return NodeModel._rootNode
+  }
 }
 
 export class Store {
+  @observable byId: { [index: string]: NodeModel } = {}
   @observable nodeList: NodeModel[]
   @observable selectedId: Option<string>
 
   private constructor(nodeList: NodeModel[], selectedId: Option<string>) {
     this.nodeList = nodeList
     this.selectedId = selectedId
+    const rootNode = NodeModel.getOrCreateRootNode()
+    this.byId[rootNode.id] = rootNode
   }
 
   @action.bound
