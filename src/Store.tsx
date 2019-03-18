@@ -39,6 +39,10 @@ export class Store {
   setSelectedId(sid: string) {
     this.selectedId = some(sid)
   }
+
+  isNodeSelected(node: NodeModel) {
+    return node.id === this.selectedId.toUndefined()
+  }
 }
 
 function getInitialState(): Store {
