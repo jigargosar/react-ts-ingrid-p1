@@ -100,13 +100,6 @@ function getInitialState(): State {
 
 function App() {
   const [state, setState] = useState(getInitialState)
-  const [nodeList] = useState(() => makeBy(10, () => new NodeModel()))
-
-  const maybeFirst = head(nodeList)
-
-  const [selectedId, setSelectedId] = useState(() =>
-    maybeFirst.map(_ => _.id),
-  )
 
   const effects = useMemo(() => {
     return {
@@ -124,9 +117,9 @@ function App() {
   return (
     <div className="min-vh-100">
       <NodeList
-        nodeList={nodeList}
-        selectedId={selectedId}
-        setSelectedId={id => setSelectedId(some(id))}
+        nodeList={state.nodeList}
+        selectedId={state.selectedId}
+        setSelectedId={effects.setSelectedId}
       />
     </div>
   )
