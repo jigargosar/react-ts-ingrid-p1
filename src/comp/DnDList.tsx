@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import cn from 'classnames'
 import { observable } from 'mobx'
 
@@ -8,6 +8,7 @@ class DnDState {
   @observable px = 0
   @observable py = 0
   @observable _overItem: any = null
+  @observable _insertAtBottom = true
 
   get isDraggingAny() {
     return !!this._di
@@ -35,7 +36,7 @@ class DnDState {
     return this._di
   }
 
-  draggableHandlersForItem(item: any) {
+  draggableHandlersForItem(item: any, ref: React.MutableRefObject<any>) {
     return {
       onMouseDown: (e: React.MouseEvent) => {
         if (this.isDraggingAny) return
@@ -48,6 +49,14 @@ class DnDState {
       onMouseMove: (e: React.MouseEvent) => {
         if (!this.isDraggingAny) return
         this._overItem = item
+        const el: HTMLDivElement | undefined = ref.current
+        if (el) {
+          const clientRect = el.getBoundingClientRect()
+          e.persist()
+          const clientCY = clientRect.top + clientRect.height / 2
+          console.log(`clientRect`, clientRect.top, clientCY, e.clientY)
+          this._insertAtBottom = e.clientY >= clientCY
+        }
       },
       onMouseLeave: (e: React.MouseEvent) => {
         if (!this.isDraggingAny) return
@@ -68,14 +77,18 @@ type DnDItemProps = {
 function DnDItem({ state, item, children }: DnDItemProps) {
   const isBeingDragged = state.isDraggingItem(item)
   const isBeingDraggedOver = state.isDraggedOver(item)
+  const shouldInsertAtBottom = state._insertAtBottom
 
+  const ref: React.MutableRefObject<any> = useRef()
   return (
     <div
+      ref={ref}
       className={cn(
         { 'o-30': isBeingDragged },
-        { 'bb b--red': isBeingDraggedOver },
+        { 'bw2 b--red': isBeingDraggedOver },
+        isBeingDraggedOver ? (shouldInsertAtBottom ? 'bb' : 'bt') : '',
       )}
-      {...state.draggableHandlersForItem(item)}
+      {...state.draggableHandlersForItem(item, ref)}
     >
       {children}
     </div>
