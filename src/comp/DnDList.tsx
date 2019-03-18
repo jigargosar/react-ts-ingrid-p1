@@ -29,6 +29,18 @@ class DnDState {
     }
     return this._di
   }
+
+  draggableHandlersForItem(item: any) {
+    return {
+      onMouseDown: (e: React.MouseEvent) => {
+        e.persist()
+        console.log(`e`, e)
+        this.startDraggingItem(item)
+        this.px = e.pageX
+        this.py = e.pageY
+      },
+    }
+  }
 }
 
 type DnDItemProps = {
@@ -39,16 +51,11 @@ type DnDItemProps = {
 
 function DnDItem({ state, item, children }: DnDItemProps) {
   const isBeingDragged = state.isDraggingItem(item)
+
   return (
     <div
       className={cn({ 'o-30': isBeingDragged })}
-      onMouseDown={e => {
-        e.persist()
-        console.log(`e`, e)
-        state.startDraggingItem(item)
-        state.px = e.pageX
-        state.py = e.pageY
-      }}
+      {...state.draggableHandlersForItem(item)}
     >
       {children}
     </div>
