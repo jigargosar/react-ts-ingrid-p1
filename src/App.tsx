@@ -25,7 +25,11 @@ class Node {
 }
 
 function NodeView({ node }: { node: Node }) {
-  return <div className="ph3 pv2">{node.displayTitle}</div>
+  return (
+    <div className="ph3 pv2 br2 hover-bg-black-10">
+      {node.displayTitle}
+    </div>
+  )
 }
 
 function App() {
