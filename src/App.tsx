@@ -3,6 +3,7 @@ import faker from 'faker'
 import nanoid from 'nanoid'
 import { head, makeBy } from 'fp-ts/lib/Array'
 import { Option } from 'fp-ts/lib/Option'
+import cn from 'classnames'
 
 class NodeModel {
   private readonly _id: string
@@ -30,7 +31,12 @@ type NodeListItemProps = { node: NodeModel; isSelected: boolean }
 
 function NodeListItem({ node, isSelected }: NodeListItemProps) {
   return (
-    <div className="ph3 pv2 br2 hover-bg-black-10">
+    <div
+      className={cn(
+        'ph3 pv2 br2',
+        isSelected ? 'bg-blue white hover-white-80' : 'hover-bg-black-10',
+      )}
+    >
       {node.displayTitle}
     </div>
   )
@@ -43,7 +49,6 @@ function NodeList({ nodeList, selectedId }: NodeListProps) {
     <div className="pa3">
       {nodeList.map(node => {
         const selected = selectedId.toUndefined() === node.id
-        console.log(`selected`, selected)
 
         return (
           <NodeListItem key={node.id} node={node} isSelected={selected} />

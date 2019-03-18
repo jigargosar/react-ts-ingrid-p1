@@ -8,6 +8,7 @@
     "@types/react": "16.8.8",
     "@types/react-dom": "16.8.2",
     "aproba": "latest",
+    "classnames": "^2.2.6",
     "faker": "^4.1.0",
     "fp-ts": "^1.14.4",
     "nanoid": "^2.0.1",
@@ -34,6 +35,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@types/classnames": "^2.2.7",
     "@types/faker": "^4.1.5",
     "@types/nanoid": "^1.2.1",
     "@types/ramda": "^0.26.3",
