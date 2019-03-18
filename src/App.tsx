@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import cn from 'classnames'
 import { observer, useObservable } from 'mobx-react-lite'
 import { NodeModel, Store, useAppStore } from './Store'
@@ -47,8 +47,23 @@ const DnDList = observer(
   }) => {
     const state = useObservable({ di: null })
 
+    useEffect(() => {
+      function mouseUpListener(e: MouseEvent) {
+        state.di = null
+      }
+
+      function mouseMoveListener(e: MouseEvent) {}
+
+      window.addEventListener('mouseup', mouseUpListener)
+      window.addEventListener('mousemove', mouseMoveListener)
+      return () => {
+        window.removeEventListener('mouseup', mouseUpListener)
+        window.removeEventListener('mousemove', mouseMoveListener)
+      }
+    }, [])
+
     return (
-      <div className="relative" onMouseUp={() => (state.di = null)}>
+      <div className="relative">
         {list.map((item, idx) => {
           return (
             <div
@@ -62,7 +77,7 @@ const DnDList = observer(
         })}
         {state.di && (
           <div className="absolute" style={{ top: 10, left: 10 }}>
-            renderItem(state.di, -1)
+            {renderItem(state.di, -1)}
           </div>
         )}
       </div>
