@@ -7,6 +7,10 @@ class Node {
   constructor() {
     this.title = faker.name.lastName()
   }
+
+  get displayTitle() {
+    return this.title
+  }
 }
 
 function App() {
