@@ -30,9 +30,10 @@ type NodeListProps = {
 
 const NodeList = observer(({ store }: NodeListProps) => (
   <div className="pa3">
-    {store.nodeList.map(node => (
-      <NodeListItem key={node.id} node={node} store={store} />
-    ))}
+    <DnDList
+      list={store.nodeList}
+      renderItem={node => <NodeListItem node={node} store={store} />}
+    />
   </div>
 ))
 
