@@ -10,10 +10,14 @@ import { Option, some } from 'fp-ts/lib/Option'
 export class NodeModel {
   @observable private readonly _id: string
   @observable title: string
+  @observable childIds: string[]
+  @observable collapsed: boolean
 
   private constructor() {
     this._id = `id_${nanoid()}`
     this.title = faker.name.lastName()
+    this.childIds = []
+    this.collapsed = false
   }
 
   get id() {
