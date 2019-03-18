@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import cn from 'classnames'
 import { observer } from 'mobx-react-lite'
 import { NodeModel, Store, useAppStore } from './Store'
@@ -48,7 +48,7 @@ const DnDList = observer(
     return (
       <>
         {list.map((item, idx) => {
-          return <Fragment key={idx}>{renderItem(item, idx)}</Fragment>
+          return <div key={idx}>{renderItem(item, idx)}</div>
         })}
       </>
     )
