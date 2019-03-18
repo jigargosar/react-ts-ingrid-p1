@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import faker from 'faker'
 import nanoid from 'nanoid'
 import { head, makeBy } from 'fp-ts/lib/Array'
-import { Option, some } from 'fp-ts/lib/Option'
+import { fromNullable, Option, some } from 'fp-ts/lib/Option'
 import cn from 'classnames'
 
 class NodeModel {
@@ -77,7 +77,29 @@ function NodeList({ nodeList, selectedId, setSelectedId }: NodeListProps) {
   )
 }
 
+function getCached(key: string) {
+  return fromNullable(localStorage.getItem(key)).map(str => {
+    try {
+      return JSON.parse(str)
+    } catch (e) {
+      console.error(e)
+      return null
+    }
+  })
+}
+
+type State = {
+  nodeList: NodeModel[]
+  selectedId: Option<string>
+}
+
+function getInitialState(): State {
+  const nodeList = makeBy(10, () => new NodeModel())
+  return { nodeList, selectedId: head(nodeList).map(_ => _.id) }
+}
+
 function App() {
+  const [state, setState] = useState(getInitialState)
   const [nodeList] = useState(() => makeBy(10, () => new NodeModel()))
 
   const maybeFirst = head(nodeList)
@@ -85,6 +107,19 @@ function App() {
   const [selectedId, setSelectedId] = useState(() =>
     maybeFirst.map(_ => _.id),
   )
+
+  const effects = useMemo(() => {
+    return {
+      setSelectedId(sid: string) {
+        setState(os => {
+          return {
+            ...os,
+            selectedId: some(sid),
+          }
+        })
+      },
+    }
+  }, [])
 
   return (
     <div className="min-vh-100">
