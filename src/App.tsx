@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { Dispatch, SetStateAction, useMemo, useState } from 'react'
 import faker from 'faker'
 import nanoid from 'nanoid'
 import { head, makeBy } from 'fp-ts/lib/Array'
@@ -96,19 +96,25 @@ function getInitialState(): State {
   return { nodeList, selectedId: head(nodeList).map(_ => _.id) }
 }
 
-function App() {
-  const [state, setState] = useState(getInitialState)
+type SetState = Dispatch<SetStateAction<State>>
 
-  const effects = useMemo(() => {
+function useActions(setState: SetState) {
+  return useMemo(() => {
     return {
       setSelectedId(sid: string) {
-        setState(os => ({
-          ...os,
+        setState((os: State) => ({
+          nodeList: os.nodeList,
           selectedId: some(sid),
         }))
       },
     }
   }, [])
+}
+
+function App() {
+  const [state, setState] = useState(getInitialState)
+
+  const effects = useActions(setState)
 
   return (
     <div className="min-vh-100">
