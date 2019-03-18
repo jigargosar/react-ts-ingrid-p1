@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import cn from 'classnames'
 import { observer } from 'mobx-react-lite'
 import { NodeModel, Store, useAppStore } from './Store'
@@ -35,6 +35,26 @@ const NodeList = observer(({ store }: NodeListProps) => (
     ))}
   </div>
 ))
+
+const DnDList = observer(
+  ({
+    list,
+    renderItem,
+  }: {
+    list: any[]
+    renderItem: (item: any, idx: number) => React.ReactNode
+  }) => {
+    return (
+      <>
+        {list.map((item, idx) => {
+          return <Fragment key={idx}>{renderItem(item, idx)}</Fragment>
+        })}
+      </>
+    )
+  },
+)
+
+DnDList.displayName = 'DnDList'
 
 const App = observer(() => {
   const store = useAppStore()
