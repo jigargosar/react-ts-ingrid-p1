@@ -32,7 +32,7 @@ class NodeModel {
 type NodeListItemProps = {
   node: NodeModel
   isSelected: boolean
-  store: State
+  store: Store
 }
 
 const NodeListItem = observer(
@@ -51,7 +51,7 @@ const NodeListItem = observer(
 )
 
 type NodeListProps = {
-  store: State
+  store: Store
 }
 
 const NodeList = observer(({ store }: NodeListProps) => (
@@ -71,7 +71,7 @@ const NodeList = observer(({ store }: NodeListProps) => (
   </div>
 ))
 
-class State {
+class Store {
   @observable nodeList: NodeModel[]
   @observable selectedId: Option<string>
 
@@ -85,9 +85,9 @@ class State {
   }
 }
 
-function getInitialState(): State {
+function getInitialState(): Store {
   const nodeList = makeBy(10, () => new NodeModel())
-  return new State(nodeList, head(nodeList).map(_ => _.id))
+  return new Store(nodeList, head(nodeList).map(_ => _.id))
 }
 
 const App = observer(() => {
