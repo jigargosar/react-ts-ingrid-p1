@@ -1,7 +1,8 @@
 import React from 'react'
 import faker from 'faker'
 import nanoid from 'nanoid'
-import { head, times } from 'ramda'
+import { head, makeBy } from 'fp-ts/lib/Array'
+import { Option } from 'fp-ts/lib/Option'
 
 class NodeModel {
   private readonly _id: string
@@ -34,7 +35,7 @@ function NodeListItem({ node, isSelected }: NodeListItemProps) {
   )
 }
 
-type NodeListProps = { nodeList: NodeModel[]; selectedId?: string }
+type NodeListProps = { nodeList: NodeModel[]; selectedId: Option<string> }
 
 function NodeList({ nodeList, selectedId }: NodeListProps) {
   return (
@@ -43,7 +44,7 @@ function NodeList({ nodeList, selectedId }: NodeListProps) {
         <NodeListItem
           key={node.id}
           node={node}
-          isSelected={selectedId === node.id}
+          isSelected={selectedId.toUndefined() === node.id}
         />
       ))}
     </div>
@@ -51,10 +52,10 @@ function NodeList({ nodeList, selectedId }: NodeListProps) {
 }
 
 function App() {
-  const nodeList = times(() => new NodeModel(), 10)
+  const nodeList = makeBy(10, () => new NodeModel())
 
   const maybeFirst = head(nodeList)
-  const selectedId = maybeFirst ? maybeFirst.id : maybeFirst
+  const selectedId = maybeFirst.map(_ => _.id)
 
   return (
     <div className="min-vh-100">
