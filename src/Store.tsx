@@ -1,9 +1,11 @@
 import { useState } from 'react'
-import { observable } from 'mobx'
+import { action, configure, observable } from 'mobx'
 import nanoid from 'nanoid'
 import faker from 'faker'
 import { head, makeBy } from 'fp-ts/lib/Array'
 import { Option, some } from 'fp-ts/lib/Option'
+
+configure({ enforceActions: 'always', computedRequiresReaction: true })
 
 export class NodeModel {
   @observable private readonly _id: string
@@ -43,14 +45,15 @@ export class Store {
   isNodeSelected(node: NodeModel) {
     return node.id === this.selectedId.toUndefined()
   }
-}
 
-function getInitialState(): Store {
-  const nodeList = makeBy(10, () => new NodeModel())
-  return new Store(nodeList, head(nodeList).map(_ => _.id))
+  @action
+  static createStore(): Store {
+    const nodeList = makeBy(10, () => new NodeModel())
+    return new Store(nodeList, head(nodeList).map(_ => _.id))
+  }
 }
 
 export function useAppStore() {
-  const [store] = useState(getInitialState)
+  const [store] = useState(Store.createStore)
   return store
 }
