@@ -54,8 +54,6 @@ type NodeListProps = {
   effects: Effects
 }
 
-type Effects = { setSelectedId: (nodeId: string) => void }
-
 function NodeList({ nodeList, selectedId, effects }: NodeListProps) {
   return (
     <div className="pa3">
@@ -90,6 +88,8 @@ type State = {
   nodeList: NodeModel[]
   selectedId: Option<string>
 }
+
+type Effects = { setSelectedId: (nodeId: string) => void }
 
 function getInitialState(): State {
   const nodeList = makeBy(10, () => new NodeModel())
