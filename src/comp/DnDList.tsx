@@ -7,6 +7,7 @@ class DnDState {
   @observable _di: any = null
   @observable px = 0
   @observable py = 0
+  @observable _overItem: any = null
 
   get isDraggingAny() {
     return !!this._di
@@ -33,11 +34,20 @@ class DnDState {
   draggableHandlersForItem(item: any) {
     return {
       onMouseDown: (e: React.MouseEvent) => {
+        if (!this.isDraggingAny) return
         e.persist()
         console.log(`e`, e)
         this.startDraggingItem(item)
         this.px = e.pageX
         this.py = e.pageY
+      },
+      onMouseEnter: (e: React.MouseEvent) => {
+        this._overItem = item
+      },
+      onMouseLeave: (e: React.MouseEvent) => {
+        if (this._overItem === item) {
+          this._overItem = null
+        }
       },
     }
   }
