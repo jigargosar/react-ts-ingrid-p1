@@ -51,18 +51,22 @@ export class Store {
   @observable byId: { [index: string]: NodeModel } = {}
   @observable nodeList: NodeModel[]
   @observable selectedId: string
-
   private constructor(nodeList: NodeModel[]) {
     this.nodeList = nodeList
     this.selectedId = NodeModel.rootNodeId
     this.registerNode(NodeModel.getOrCreateRootNode())
     this.appendNewChild()
     this.appendNewChild()
+    this.getById = this.getById.bind(this)
   }
 
   @action.bound
   private registerNode(node: NodeModel) {
     this.byId[node.id] = node
+  }
+
+  getChildrenOf(node: NodeModel) {
+    return node.childIds.map(this.getById)
   }
 
   getById(id: string) {

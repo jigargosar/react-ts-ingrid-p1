@@ -3,39 +3,6 @@ import cn from 'classnames'
 import { observer } from 'mobx-react-lite'
 import { NodeModel, Store, useAppStore } from './Store'
 
-type NodeListItemProps = {
-  node: NodeModel
-  store: Store
-}
-
-const NodeListItem = observer(({ node, store }: NodeListItemProps) => {
-  const isSelected = store.isNodeSelected(node)
-  return (
-    <div
-      className={cn(
-        'ph3 pv2 br2',
-        isSelected ? 'bg-blue white hover-white-80' : 'hover-bg-black-10',
-      )}
-      tabIndex={isSelected ? 0 : -1}
-      onFocus={() => store.setSelectedId(node.id)}
-    >
-      {node.displayTitle}
-    </div>
-  )
-})
-
-type NodeListProps = {
-  store: Store
-}
-
-const NodeList = observer(({ store }: NodeListProps) => (
-  <div className="pa3">
-    {store.nodeList.map(node => (
-      <NodeListItem key={node.id} node={node} store={store} />
-    ))}
-  </div>
-))
-
 type NodeTreeProps = {
   node: NodeModel
   store: Store
@@ -44,16 +11,25 @@ type NodeTreeProps = {
 const NodeTree = observer(({ node, store }: NodeTreeProps) => {
   const isSelected = store.isNodeSelected(node)
   return (
-    <div
-      className={cn(
-        'ph3 pv2 br2',
-        isSelected ? 'bg-blue white hover-white-80' : 'hover-bg-black-10',
-      )}
-      tabIndex={isSelected ? 0 : -1}
-      onFocus={() => store.setSelectedId(node.id)}
-    >
-      {node.displayTitle}
-    </div>
+    <>
+      <div
+        className={cn(
+          'pa2 br2',
+          isSelected
+            ? 'bg-blue white hover-white-80'
+            : 'hover-bg-black-10',
+        )}
+        tabIndex={isSelected ? 0 : -1}
+        onFocus={() => store.setSelectedId(node.id)}
+      >
+        {node.displayTitle}
+      </div>
+      <div className="pl4">
+        {store.getChildrenOf(node).map(childNode => (
+          <NodeTree key={childNode.id} node={childNode} store={store} />
+        ))}
+      </div>
+    </>
   )
 })
 
@@ -62,7 +38,6 @@ const App = observer(() => {
 
   return (
     <div className="min-vh-100">
-      <NodeList store={store} />
       <NodeTree node={store.rootNode} store={store} />
     </div>
   )
