@@ -67,7 +67,7 @@ const DnDList = observer(
         {list.map((item, idx) => {
           return (
             <div
-              className={cn({ 'o-10': item === state.di })}
+              className={cn({ 'o-50': item === state.di })}
               onMouseDown={() => (state.di = item)}
               key={idx}
             >
