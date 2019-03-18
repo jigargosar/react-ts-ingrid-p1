@@ -11,7 +11,7 @@ export class NodeModel {
   @observable private readonly _id: string
   @observable private readonly _title: string
 
-  constructor() {
+  private constructor() {
     this._id = `id_${nanoid()}`
     this._title = faker.name.lastName()
   }
@@ -22,6 +22,10 @@ export class NodeModel {
 
   get displayTitle() {
     return this._title
+  }
+
+  static createNew() {
+    return new NodeModel()
   }
 }
 
@@ -45,7 +49,7 @@ export class Store {
 
   @action
   static createStore(): Store {
-    const nodeList = makeBy(10, () => new NodeModel())
+    const nodeList = makeBy(10, NodeModel.createNew)
     return new Store(nodeList, head(nodeList).map(_ => _.id))
   }
 }
