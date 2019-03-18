@@ -33,7 +33,7 @@ export class Store {
   @observable nodeList: NodeModel[]
   @observable selectedId: Option<string>
 
-  constructor(nodeList: NodeModel[], selectedId: Option<string>) {
+  private constructor(nodeList: NodeModel[], selectedId: Option<string>) {
     this.nodeList = nodeList
     this.selectedId = selectedId
   }
@@ -48,13 +48,13 @@ export class Store {
   }
 
   @action
-  static createStore(): Store {
+  static create(): Store {
     const nodeList = makeBy(10, NodeModel.createNew)
     return new Store(nodeList, head(nodeList).map(_ => _.id))
   }
 }
 
 export function useAppStore() {
-  const [store] = useState(Store.createStore)
+  const [store] = useState(Store.create)
   return store
 }
