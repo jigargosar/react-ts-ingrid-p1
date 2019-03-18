@@ -36,12 +36,34 @@ const NodeList = observer(({ store }: NodeListProps) => (
   </div>
 ))
 
+type NodeTreeProps = {
+  node: NodeModel
+  store: Store
+}
+
+const NodeTree = observer(({ node, store }: NodeTreeProps) => {
+  const isSelected = store.isNodeSelected(node)
+  return (
+    <div
+      className={cn(
+        'ph3 pv2 br2',
+        isSelected ? 'bg-blue white hover-white-80' : 'hover-bg-black-10',
+      )}
+      tabIndex={isSelected ? 0 : -1}
+      onFocus={() => store.setSelectedId(node.id)}
+    >
+      {node.displayTitle}
+    </div>
+  )
+})
+
 const App = observer(() => {
   const store = useAppStore()
 
   return (
     <div className="min-vh-100">
       <NodeList store={store} />
+      <NodeTree node={store.rootNode} store={store} />
     </div>
   )
 })

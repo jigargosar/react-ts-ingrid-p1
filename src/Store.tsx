@@ -13,9 +13,9 @@ export class NodeModel {
   @observable childIds: string[]
   @observable collapsed: boolean
 
-  constructor(id?: string) {
+  constructor(id?: string, title?: string) {
     this._id = id || `id_${nanoid()}`
-    this.title = faker.name.lastName()
+    this.title = title || faker.name.lastName()
     this.childIds = []
     this.collapsed = false
   }
@@ -34,9 +34,11 @@ export class NodeModel {
 
   private static _rootNode: NodeModel
 
+  static readonly rootNodeId = 'id_root_node'
+
   static getOrCreateRootNode() {
     if (!NodeModel._rootNode) {
-      NodeModel._rootNode = new NodeModel('id_root_node')
+      NodeModel._rootNode = new NodeModel(NodeModel.rootNodeId, 'Root')
     }
     return NodeModel._rootNode
   }
@@ -56,6 +58,14 @@ export class Store {
   @action.bound
   private registerNode(node: NodeModel) {
     this.byId[node.id] = node
+  }
+
+  getById(id: string) {
+    return this.byId[id]
+  }
+
+  get rootNode() {
+    return this.byId[NodeModel.rootNodeId]
   }
 
   @action.bound
