@@ -32,14 +32,22 @@ function NodeListItem({ node }: { node: NodeModel }) {
   )
 }
 
+function NodeList({ nodeList }: { nodeList: Array<NodeModel> }) {
+  return (
+    <>
+      {nodeList.map(node => (
+        <NodeListItem key={node.id} node={node} />
+      ))}
+    </>
+  )
+}
+
 function App() {
   const nodeList = times(() => new NodeModel(), 10)
 
   return (
     <div className="min-vh-100">
-      {nodeList.map(node => (
-        <NodeListItem key={node.id} node={node} />
-      ))}
+      <NodeList nodeList={nodeList} />
     </div>
   )
 }
