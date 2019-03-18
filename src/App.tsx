@@ -86,8 +86,8 @@ function getCached(key: string) {
 }
 
 class State {
-  nodeList: NodeModel[]
-  selectedId: Option<string>
+  @observable nodeList: NodeModel[]
+  @observable selectedId: Option<string>
 
   constructor(nodeList: NodeModel[], selectedId: Option<string>) {
     this.nodeList = nodeList
