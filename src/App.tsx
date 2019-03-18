@@ -104,12 +104,10 @@ function App() {
   const effects = useMemo(() => {
     return {
       setSelectedId(sid: string) {
-        setState(os => {
-          return {
-            ...os,
-            selectedId: some(sid),
-          }
-        })
+        setState(os => ({
+          ...os,
+          selectedId: some(sid),
+        }))
       },
     }
   }, [])
