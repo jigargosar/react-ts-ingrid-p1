@@ -5,12 +5,12 @@ import { NodeModel, Store, useAppStore } from './Store'
 
 type NodeListItemProps = {
   node: NodeModel
-  isSelected: boolean
   store: Store
 }
 
-const NodeListItem = observer(
-  ({ node, isSelected, store }: NodeListItemProps) => (
+const NodeListItem = observer(({ node, store }: NodeListItemProps) => {
+  const isSelected = store.isNodeSelected(node)
+  return (
     <div
       className={cn(
         'ph3 pv2 br2',
@@ -21,8 +21,8 @@ const NodeListItem = observer(
     >
       {node.displayTitle}
     </div>
-  ),
-)
+  )
+})
 
 type NodeListProps = {
   store: Store
@@ -30,18 +30,9 @@ type NodeListProps = {
 
 const NodeList = observer(({ store }: NodeListProps) => (
   <div className="pa3">
-    {store.nodeList.map(node => {
-      const selected = store.selectedId.toUndefined() === node.id
-
-      return (
-        <NodeListItem
-          key={node.id}
-          node={node}
-          isSelected={selected}
-          store={store}
-        />
-      )
-    })}
+    {store.nodeList.map(node => (
+      <NodeListItem key={node.id} node={node} store={store} />
+    ))}
   </div>
 ))
 
