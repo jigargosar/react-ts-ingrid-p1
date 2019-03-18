@@ -38,6 +38,7 @@ export class Store {
     this.selectedId = selectedId
   }
 
+  @action.bound
   setSelectedId(sid: string) {
     this.selectedId = some(sid)
   }
