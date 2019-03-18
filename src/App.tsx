@@ -32,7 +32,8 @@ function NodeListItem({ node }: { node: NodeModel }) {
   )
 }
 
-function NodeList({ nodeList }: { nodeList: Array<NodeModel> }) {
+function NodeList(props: { nodeList: NodeModel[] }) {
+  const { nodeList } = props
   return (
     <>
       {nodeList.map(node => (
