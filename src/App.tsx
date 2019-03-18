@@ -40,13 +40,14 @@ type NodeListProps = { nodeList: NodeModel[]; selectedId: Option<string> }
 function NodeList({ nodeList, selectedId }: NodeListProps) {
   return (
     <div className="pa3">
-      {nodeList.map(node => (
-        <NodeListItem
-          key={node.id}
-          node={node}
-          isSelected={selectedId.toUndefined() === node.id}
-        />
-      ))}
+      {nodeList.map(node => {
+        const selected = selectedId.toUndefined() === node.id
+        console.log(`selected`, selected)
+
+        return (
+          <NodeListItem key={node.id} node={node} isSelected={selected} />
+        )
+      })}
     </div>
   )
 }
