@@ -36,6 +36,7 @@ function NodeListItem({ node, isSelected }: NodeListItemProps) {
         'ph3 pv2 br2',
         isSelected ? 'bg-blue white hover-white-80' : 'hover-bg-black-10',
       )}
+      tabIndex={isSelected ? 0 : -1}
     >
       {node.displayTitle}
     </div>
