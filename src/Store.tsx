@@ -41,6 +41,10 @@ export class NodeModel {
     }
     return NodeModel._rootNode
   }
+
+  appendChildId(id: string) {
+    this.childIds.push(id)
+  }
 }
 
 export class Store {
@@ -52,6 +56,8 @@ export class Store {
     this.nodeList = nodeList
     this.selectedId = NodeModel.rootNodeId
     this.registerNode(NodeModel.getOrCreateRootNode())
+    this.appendNewChild()
+    this.appendNewChild()
   }
 
   @action.bound
@@ -70,6 +76,18 @@ export class Store {
   @action.bound
   setSelectedId(sid: string) {
     this.selectedId = sid
+  }
+
+  get selectedNode() {
+    return this.getById(this.selectedId)
+  }
+
+  @action.bound
+  appendNewChild() {
+    const newNode = NodeModel.createNew()
+    this.registerNode(newNode)
+    this.selectedNode.appendChildId(newNode.id)
+    this.setSelectedId(newNode.id)
   }
 
   isNodeSelected(node: NodeModel) {
