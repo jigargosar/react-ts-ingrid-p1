@@ -78,7 +78,7 @@ function NodeList({ nodeList, selectedId, setSelectedId }: NodeListProps) {
 }
 
 function App() {
-  const nodeList = makeBy(10, () => new NodeModel())
+  const [nodeList] = useState(() => makeBy(10, () => new NodeModel()))
 
   const maybeFirst = head(nodeList)
 
