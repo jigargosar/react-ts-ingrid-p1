@@ -223,8 +223,6 @@ export class Store {
 
   @action.bound
   goPrev() {
-    if (this.isSelectedNodeRoot) return
-
     const maybeId = this.maybePrevSiblingIdOfSelected
 
     this.setSelectedId(
