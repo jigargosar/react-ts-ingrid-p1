@@ -137,6 +137,14 @@ export class Store {
     this.maybeNodeWithId = this.maybeNodeWithId.bind(this)
   }
 
+  @action
+  static create(): Store {
+    return new Store()
+  }
+
+  @action
+  static fromJSON() {}
+
   toJSON() {
     return {
       nodes: Object.values(this.byId).map(node => node.toJSON()),
@@ -244,11 +252,6 @@ export class Store {
       throw new Error('Invariant Failed.')
     }
     return parentNode
-  }
-
-  @action
-  static create(): Store {
-    return new Store()
   }
 
   private get maybePrevSiblingId() {
