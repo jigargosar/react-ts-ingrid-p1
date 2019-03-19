@@ -84,7 +84,7 @@ export class NodeModel {
     this.childIds.splice(idx, 0, childId)
   }
 
-  public insertNewChildIdAfterExistingChildId(
+  public insertNewChildIdAfter(
     newChildId: string,
     existingChildId: string,
   ) {

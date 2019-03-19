@@ -178,13 +178,11 @@ export class Store {
   addNewNode() {
     const newNode = NodeModel.createNew()
     this.registerNode(newNode)
-    if (this.isSelectedNodeRoot) {
-      this.selectedNode.appendChildId(newNode.id)
+    const maybeParent = this.maybeParentOfSelected
+    if (maybeParent) {
+      maybeParent.insertNewChildIdAfter(newNode.id, this.selectedId)
     } else {
-      this.maybeParentOfSelected.insertNewChildIdAfterExistingChildId(
-        newNode.id,
-        this.selectedId,
-      )
+      this.selectedNode.appendChildId(newNode.id)
     }
     this.setSelectedId(newNode.id)
   }
