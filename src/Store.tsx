@@ -318,6 +318,25 @@ export class Store {
       return nodeId
     }
   }
+
+  @action.bound
+  outdent() {
+    if (
+      this.isSelectedNodeRoot ||
+      this.rootNode === this.maybeParentOf(this.selectedNode)
+    )
+      return
+
+    const oldParent = this.maybeParentOf(this.selectedNode)
+    const grandParent = this.maybeParentOf(oldParent)
+
+    oldParent.removeChildId(this.selectedId)
+
+    grandParent.insertChildIdAt(
+      grandParent.indexOfChildId(oldParent.id) + 1,
+      this.selectedId,
+    )
+  }
 }
 
 export function useAppStore() {
@@ -329,6 +348,7 @@ export function useAppStore() {
         { key: 'up', handler: () => store.goPrev() },
         { key: 'down', handler: () => store.goNext() },
         { key: 'tab', handler: () => store.indent() },
+        { key: 'shift+tab', handler: () => store.outdent() },
       ]
 
       km.forEach(({ key, handler }) => {
