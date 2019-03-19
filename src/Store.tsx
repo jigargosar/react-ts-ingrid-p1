@@ -255,11 +255,9 @@ export class Store {
     if (maybeParentId) {
       const parent = this.maybeNodeWithId(maybeParentId)
       const maybeId = this.maybeNextSiblingIdOf(parent)
-      if (maybeId) {
-        return maybeId
-      } else {
-        return this.maybeNextSiblingIdOfFirstAncestorOfNodeId(parent.id)
-      }
+      return maybeId
+        ? maybeId
+        : this.maybeNextSiblingIdOfFirstAncestorOfNodeId(parent.id)
     } else {
       return null
     }
