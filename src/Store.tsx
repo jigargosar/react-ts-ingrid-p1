@@ -4,6 +4,7 @@ import nanoid from 'nanoid'
 import faker from 'faker'
 import ow from 'ow'
 import isHotkey from 'is-hotkey'
+import { getCached } from './cache-helpers'
 
 // configure({ enforceActions: 'always', computedRequiresReaction: true })
 
@@ -161,8 +162,7 @@ export class Store {
 
   @action
   static fromJSON(json: { nodes: NodeModelJSON[]; selectedId: string }) {
-    const store = new Store({}, json.selectedId)
-    json.nodes.reduce(
+    const byId = json.nodes.reduce(
       (
         acc: { [index: string]: NodeModel },
         { _id, title, childIds, collapsed },
@@ -172,7 +172,13 @@ export class Store {
       },
       {},
     )
-    return store
+    return new Store(byId, json.selectedId)
+  }
+
+  @action
+  static fromCache() {
+    const cachedJSON = getCached('rts-ingrid-p1')
+    return cachedJSON ? Store.fromJSON(cachedJSON) : Store.create()
   }
 
   toJSON() {
