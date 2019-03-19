@@ -214,17 +214,12 @@ export class Store {
     return parentNode
   }
 
-  private get maybePrevSiblingId() {
-    if (this.selectedNodeIdx > 0) {
-      return this.parentOfSelected.getChildIdAt(this.selectedNodeIdx - 1)
-    }
-    return null
+  private get maybePrevSiblingIdOfSelected() {
+    return this.parentOfSelected.maybePrevChildId(this.selectedId)
   }
 
   private get maybeNextSiblingIdOfSelected() {
-    return this.selectedNodeIdx < this.parentOfSelected.childCount - 1
-      ? this.parentOfSelected.getChildIdAt(this.selectedNodeIdx + 1)
-      : null
+    return this.parentOfSelected.maybeNextChildId(this.selectedId)
   }
 
   private maybeNextSiblingIdOf(node: NodeModel) {
@@ -240,7 +235,7 @@ export class Store {
   goPrev() {
     if (this.isSelectedNodeRoot) return
 
-    const maybeId = this.maybePrevSiblingId
+    const maybeId = this.maybePrevSiblingIdOfSelected
 
     this.setSelectedId(
       (maybeId && this.getLastVisibleDescendentIdOrSelf(maybeId)) ||
@@ -294,8 +289,8 @@ export class Store {
 
   private get maybePrevSibling() {
     return (
-      this.maybePrevSiblingId &&
-      this.maybeNodeWithId(this.maybePrevSiblingId)
+      this.maybePrevSiblingIdOfSelected &&
+      this.maybeNodeWithId(this.maybePrevSiblingIdOfSelected)
     )
   }
 

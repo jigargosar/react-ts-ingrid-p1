@@ -92,6 +92,16 @@ export class NodeModel {
     this.insertChildIdAt(idx + 1, newChildId)
   }
 
+  public maybePrevChildId(existingChildId: string) {
+    const idx = this.indexOfChildId(existingChildId)
+    return idx > 0 ? this.childIds[idx - 1] : null
+  }
+
+  public maybeNextChildId(existingChildId: string) {
+    const idx = this.indexOfChildId(existingChildId)
+    return idx < this.childCount - 1 ? this.childIds[idx + 1] : null
+  }
+
   getChildIdAt(idx: number) {
     ow(idx, ow.number.integer.greaterThanOrEqual(0))
     return this.childIds[idx]
