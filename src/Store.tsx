@@ -201,11 +201,17 @@ export class Store {
   }
 
   private get maybePrevSiblingIdOfSelected() {
-    return this.maybeParentOfSelected.maybePrevChildId(this.selectedId)
+    return (
+      this.maybeParentOfSelected &&
+      this.maybeParentOfSelected.maybePrevChildId(this.selectedId)
+    )
   }
 
   private get maybeNextSiblingIdOfSelected() {
-    return this.maybeParentOfSelected.maybeNextChildId(this.selectedId)
+    return (
+      this.maybeParentOfSelected &&
+      this.maybeParentOfSelected.maybeNextChildId(this.selectedId)
+    )
   }
 
   private maybeNextSiblingIdOf(node: NodeModel) {
