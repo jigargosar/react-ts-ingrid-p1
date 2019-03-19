@@ -11,7 +11,6 @@ class NodeCollection {
   @observable byId: { [index: string]: NodeModel }
   constructor(byId: { [index: string]: NodeModel }) {
     this.byId = byId
-    // this.maybeNodeWithId = this.maybeNodeWithId.bind(this)
   }
 
   toJSON() {
@@ -30,6 +29,44 @@ class NodeCollection {
       {},
     )
     return new NodeCollection(byId)
+  }
+
+  private registerNode(node: NodeModel) {
+    this.byId[node.id] = node
+  }
+
+  public getVisibleChildrenOf(node: NodeModel) {
+    return node.hasVisibleChildren ? this.getChildNodesOf(node) : []
+  }
+
+  private getChildNodesOf(node: NodeModel) {
+    return node.childIds.map(childNode => this.maybeNodeWithId(childNode))
+  }
+
+  private maybeNodeWithId(id: string) {
+    return this.byId[id]
+  }
+
+  public get rootNode() {
+    return this.byId[NodeModel.rootNodeId]
+  }
+
+  private get idToPidLookup() {
+    return values(this.byId).reduce((acc, node) => {
+      node.childIds.forEach((cid: string) => {
+        acc[cid] = node.id
+      })
+      return acc
+    }, {})
+  }
+
+  private maybeParentIdOf(node: NodeModel) {
+    return this.idToPidLookup[node.id]
+  }
+
+  private maybeParentOf(node: NodeModel) {
+    const pid = this.maybeParentIdOf(node)
+    return this.maybeNodeWithId(pid)
   }
 }
 
