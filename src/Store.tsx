@@ -66,7 +66,7 @@ class NodeCollection {
 
   private maybeParentOf(node: NodeModel) {
     const pid = this.maybeParentIdOf(node)
-    return this.maybeNodeWithId(pid)
+    return pid && this.maybeNodeWithId(pid)
   }
 }
 
