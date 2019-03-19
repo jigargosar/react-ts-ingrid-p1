@@ -125,21 +125,26 @@ export class NodeModel {
 }
 
 export class Store {
-  @observable byId: { [index: string]: NodeModel } = {}
+  @observable byId: { [index: string]: NodeModel }
   @observable selectedId: string
 
-  private constructor() {
-    this.selectedId = NodeModel.rootNodeId
-    this.registerNode(NodeModel.getOrCreateRootNode())
-    this.appendNewChild()
-    this.attemptGoUp()
-    this.appendNewChild()
+  private constructor(
+    byId: { [index: string]: NodeModel },
+    selectedId: string,
+  ) {
+    this.byId = byId
+    this.selectedId = selectedId
     this.maybeNodeWithId = this.maybeNodeWithId.bind(this)
   }
 
   @action
   static create(): Store {
-    return new Store()
+    const store = new Store({}, NodeModel.rootNodeId)
+    store.registerNode(NodeModel.getOrCreateRootNode())
+    store.appendNewChild()
+    store.attemptGoUp()
+    store.appendNewChild()
+    return store
   }
 
   @action
