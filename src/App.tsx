@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useLayoutEffect, useRef } from 'react'
 import cn from 'classnames'
 import { observer } from 'mobx-react-lite'
 import { NodeModel, Store, useAppStore } from './Store'
@@ -14,6 +14,16 @@ function getNodeIcon(node: NodeModel) {
 
 const NodeTree = observer(({ node, store }: NodeTreeProps) => {
   const isSelected = store.isNodeSelected(node)
+
+  const ref: React.RefObject<HTMLDivElement> = useRef(null)
+
+  useLayoutEffect(() => {
+    const el = ref.current
+    if (el && document.activeElement !== el) {
+      el.focus()
+    }
+  }, [isSelected])
+
   return (
     <div className="code">
       <div className="flex">
@@ -30,7 +40,8 @@ const NodeTree = observer(({ node, store }: NodeTreeProps) => {
               ? 'bg-blue white hover-white-80'
               : 'hover-bg-black-10',
           )}
-          tabIndex={isSelected ? 0 : -1}
+          ref={ref}
+          tabIndex={isSelected ? 0 : undefined}
           onFocus={() => store.setSelectedId(node.id)}
         >
           {node.displayTitle}
