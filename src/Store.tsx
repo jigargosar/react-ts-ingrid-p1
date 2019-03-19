@@ -12,11 +12,25 @@ export class NodeModel {
   @observable title: string
   @observable childIds: string[]
   @observable collapsed: boolean
-  constructor(id?: string, title?: string) {
+  constructor(
+    id?: string,
+    title?: string,
+    childIds?: string[],
+    collapsed?: boolean,
+  ) {
     this._id = id || `id_${nanoid()}`
     this.title = title || faker.name.lastName()
-    this.childIds = []
-    this.collapsed = false
+    this.childIds = childIds || []
+    this.collapsed = collapsed || false
+  }
+
+  toJSON() {
+    return {
+      _id: this.id,
+      title: this.title,
+      childIds: this.childIds,
+      collapsed: this.collapsed,
+    }
   }
 
   get id() {
@@ -93,10 +107,10 @@ export class NodeModel {
 
     return idx < this.childCount - 1 ? this.getChildIdAt(idx + 1) : null
   }
-
   collapse() {
     this.collapsed = true
   }
+
   expand() {
     this.collapsed = false
   }
@@ -113,6 +127,7 @@ export class NodeModel {
 export class Store {
   @observable byId: { [index: string]: NodeModel } = {}
   @observable selectedId: string
+
   private constructor() {
     this.selectedId = NodeModel.rootNodeId
     this.registerNode(NodeModel.getOrCreateRootNode())
@@ -120,6 +135,13 @@ export class Store {
     this.attemptGoUp()
     this.appendNewChild()
     this.maybeNodeWithId = this.maybeNodeWithId.bind(this)
+  }
+
+  toJSON() {
+    return {
+      nodes: Object.values(this.byId).map(node => node.toJSON()),
+      selectedId: this.selectedId,
+    }
   }
 
   private registerNode(node: NodeModel) {
