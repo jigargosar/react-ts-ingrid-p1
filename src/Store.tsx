@@ -127,7 +127,7 @@ export class Store {
   }
 
   public getVisibleChildrenOf(node: NodeModel) {
-    return node.canCollapse ? this.getChildNodesOf(node) : []
+    return node.hasVisibleChildren ? this.getChildNodesOf(node) : []
   }
 
   private getChildNodesOf(node: NodeModel) {
