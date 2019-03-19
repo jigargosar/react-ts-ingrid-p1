@@ -8,28 +8,40 @@ type NodeTreeProps = {
   store: Store
 }
 
+function getNodeIcon(node: NodeModel) {
+  return node.canCollapse ? '-' : node.canExpand ? '+' : ' '
+}
+
 const NodeTree = observer(({ node, store }: NodeTreeProps) => {
   const isSelected = store.isNodeSelected(node)
   return (
-    <>
-      <div
-        className={cn(
-          'pa2 br2',
-          isSelected
-            ? 'bg-blue white hover-white-80'
-            : 'hover-bg-black-10',
-        )}
-        tabIndex={isSelected ? 0 : -1}
-        onFocus={() => store.setSelectedId(node.id)}
-      >
-        {node.displayTitle}
+    <div className="code">
+      <div className="flex">
+        <div
+          className="flex items-center justify-center"
+          style={{ width: '1.5rem' }}
+        >
+          {getNodeIcon(node)}
+        </div>
+        <div
+          className={cn(
+            'outline-0 ph2 br2 pv1',
+            isSelected
+              ? 'bg-blue white hover-white-80'
+              : 'hover-bg-black-10',
+          )}
+          tabIndex={isSelected ? 0 : -1}
+          onFocus={() => store.setSelectedId(node.id)}
+        >
+          {node.displayTitle}
+        </div>
       </div>
       <div className="pl4">
         {store.getVisibleChildrenOf(node).map(childNode => (
           <NodeTree key={childNode.id} node={childNode} store={store} />
         ))}
       </div>
-    </>
+    </div>
   )
 })
 
