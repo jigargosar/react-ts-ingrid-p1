@@ -66,6 +66,10 @@ export class NodeModel {
     ow(idx, ow.number.integer.greaterThanOrEqual(0))
     return this.childIds[idx]
   }
+
+  get maybeFirstChildId() {
+    return this.childIds.length > 0 ? this.childIds[0] : null
+  }
 }
 
 export class Store {
@@ -190,6 +194,18 @@ export class Store {
     return null
   }
 
+  private get maybeNextSiblingId() {
+    if (!this.maybeParentId) return
+
+    return this.selectedNodeIdx < this.parentOfSelected.childCount - 1
+      ? this.parentOfSelected.getChildIdAt(this.selectedNodeIdx + 1)
+      : null
+  }
+
+  private get maybeFirstChildId() {
+    return this.selectedNode.maybeFirstChildId
+  }
+
   private get maybeParentId() {
     return this.getParentIdOf(this.selectedNode)
   }
@@ -201,7 +217,11 @@ export class Store {
     )
   }
   @action.bound
-  attemptGoNext() {}
+  attemptGoNext() {
+    this.setSelectedId(
+      this.maybeFirstChildId || this.maybeNextSiblingId || this.selectedId,
+    )
+  }
 }
 
 export function useAppStore() {
