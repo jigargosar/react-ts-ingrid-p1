@@ -166,10 +166,6 @@ export class Store {
     return this.getParentOf(this.selectedNode)
   }
 
-  private get selectedNodeIdx() {
-    return this.parentOfSelected.indexOfChildId(this.selectedId)
-  }
-
   private get isSelectedNodeRoot() {
     return this.selectedNode === this.rootNode
   }
