@@ -193,8 +193,7 @@ export class Store {
     this.setSelectedId(newNode.id)
   }
 
-  @action.bound
-  attemptGoUp() {
+  private attemptGoUp() {
     const parentId = this.maybeParentIdOf(this.selectedNode)
     if (parentId) {
       this.setSelectedId(parentId)
