@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { action, observable, values } from 'mobx'
+import { action, autorun, observable, values } from 'mobx'
 import nanoid from 'nanoid'
 import faker from 'faker'
 import ow from 'ow'
 import isHotkey from 'is-hotkey'
-import { getCached } from './cache-helpers'
+import { getCached, setCache } from './cache-helpers'
+import { useDisposable } from 'mobx-react-lite'
 
 // configure({ enforceActions: 'always', computedRequiresReaction: true })
 
@@ -178,8 +179,7 @@ export class Store {
   }
 
   @action
-  public static fromCache() {
-    const cachedJSON = getCached('rts-ingrid-p1')
+  public static fromCache(cachedJSON: any) {
     return cachedJSON ? Store.fromJSON(cachedJSON) : Store.create()
   }
 
@@ -440,7 +440,14 @@ export class Store {
 }
 
 export function useAppStore() {
-  const [store] = useState(Store.fromCache)
+  const [store] = useState(() =>
+    Store.fromCache(getCached('rts-ingrid-p1')),
+  )
+  useDisposable(() =>
+    autorun(() => {
+      setCache('rts-ingrid-p1', store.toJSON())
+    }),
+  )
   useEffect(() => {
     function kdl(e: KeyboardEvent) {
       const km = [
