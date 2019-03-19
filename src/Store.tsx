@@ -84,6 +84,10 @@ export class NodeModel {
     return this.hasChildren && !this.collapsed
   }
 
+  get maybeLastVisibleChildId() {
+    return this.hasVisibleChildren && this.childIds[this.childCount - 1]
+  }
+
   maybeNextSiblingId(childId: string) {
     const idx = this.indexOfChildId(childId)
 
@@ -231,8 +235,11 @@ export class Store {
   @action.bound
   goPrev() {
     if (this.isSelectedNodeRoot) return
+
+    const maybeId = this.maybePrevSiblingId
+
     this.setSelectedId(
-      this.maybePrevSiblingId ||
+      (maybeId && this.getLastVisibleDescendentIdOrSelf(maybeId)) ||
         this.maybeParentIdOfSelected ||
         this.selectedId,
     )
@@ -296,6 +303,19 @@ export class Store {
     if (newParent) {
       this.parentOfSelected.removeChildId(this.selectedId)
       newParent.appendChildId(this.selectedId)
+    }
+  }
+
+  private getLastVisibleDescendentIdOrSelf(nodeId: string): string {
+    const node = this.maybeNodeWithId(nodeId)
+    if (node) {
+      return node.maybeLastVisibleChildId
+        ? this.getLastVisibleDescendentIdOrSelf(
+            node.maybeLastVisibleChildId,
+          )
+        : nodeId
+    } else {
+      return nodeId
     }
   }
 }
