@@ -50,7 +50,9 @@ const App = observer(() => {
 
   return (
     <div className="min-vh-100">
-      <NodeTree node={store.rootNode} store={store} />
+      <div className="pa2">
+        <NodeTree node={store.rootNode} store={store} />
+      </div>
     </div>
   )
 })
