@@ -58,20 +58,19 @@ export class Store {
     this.getNodeById = this.getNodeById.bind(this)
   }
 
-  @action.bound
   private registerNode(node: NodeModel) {
     this.byId[node.id] = node
   }
 
-  getChildrenOf(node: NodeModel) {
+  public getChildrenOf(node: NodeModel) {
     return node.childIds.map(this.getNodeById)
   }
 
-  getNodeById(id: string) {
+  private getNodeById(id: string) {
     return this.byId[id]
   }
 
-  get rootNode() {
+  public get rootNode() {
     return this.byId[NodeModel.rootNodeId]
   }
 
@@ -88,16 +87,11 @@ export class Store {
     return this.selectedNode
   }
 
-  @action.bound
   appendNewChild() {
     const newNode = NodeModel.createNew()
     this.registerNode(newNode)
     this.selectedNode.appendChildId(newNode.id)
     this.setSelectedId(newNode.id)
-  }
-
-  private get isSelectedNodeRoot() {
-    return this.selectedNode === this.rootNode
   }
 
   @action.bound
@@ -107,6 +101,10 @@ export class Store {
     } else {
       this.appendNewSibling()
     }
+  }
+
+  private get isSelectedNodeRoot() {
+    return this.selectedNode === this.rootNode
   }
 
   private appendNewSibling() {
@@ -124,7 +122,7 @@ export class Store {
     }
   }
 
-  get idToPidLookup() {
+  private get idToPidLookup() {
     return values(this.byId).reduce((acc, node) => {
       node.childIds.forEach((cid: string) => {
         acc[cid] = node.id
@@ -147,7 +145,7 @@ export class Store {
     return parentNode
   }
 
-  isNodeSelected(node: NodeModel) {
+  public isNodeSelected(node: NodeModel) {
     return node.id === this.selectedId
   }
 
