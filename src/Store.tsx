@@ -98,9 +98,9 @@ export class Store {
   public static create(): Store {
     const store = new Store(NodeCollection.create(), NodeModel.rootNodeId)
 
-    store.appendNewChild()
+    store.addNewNode()
     store.attemptGoUp()
-    store.appendNewChild()
+    store.addNewNode()
     return store
   }
 
@@ -178,29 +178,21 @@ export class Store {
     return node.id === this.selectedId
   }
 
-  private appendNewChild() {
-    const newNode = NodeModel.createNew()
-    this.registerNode(newNode)
-    this.selectedNode.appendChildId(newNode.id)
-    this.setSelectedId(newNode.id)
-  }
-
-  private appendNewSibling() {
-    const newNode = NodeModel.createNew()
-    this.registerNode(newNode)
-    this.parentOfSelected.insertChildIdAt(
-      this.selectedNodeIdx + 1,
-      newNode.id,
-    )
-    this.setSelectedId(newNode.id)
-  }
-
   @action.bound
   addNewNode() {
     if (this.isSelectedNodeRoot) {
-      this.appendNewChild()
+      const newNode = NodeModel.createNew()
+      this.registerNode(newNode)
+      this.selectedNode.appendChildId(newNode.id)
+      this.setSelectedId(newNode.id)
     } else {
-      this.appendNewSibling()
+      const newNode = NodeModel.createNew()
+      this.registerNode(newNode)
+      this.parentOfSelected.insertChildIdAt(
+        this.selectedNodeIdx + 1,
+        newNode.id,
+      )
+      this.setSelectedId(newNode.id)
     }
   }
 
