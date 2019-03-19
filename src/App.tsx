@@ -1,7 +1,8 @@
 import React, { useLayoutEffect, useRef } from 'react'
 import cn from 'classnames'
 import { observer } from 'mobx-react-lite'
-import { NodeModel, Store, useAppStore } from './Store'
+import { Store, useAppStore } from './Store'
+import { NodeModel } from './model/NodeModel'
 
 type NodeTreeProps = {
   node: NodeModel
