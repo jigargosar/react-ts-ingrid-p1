@@ -12,7 +12,6 @@ export class NodeModel {
   @observable title: string
   @observable childIds: string[]
   @observable collapsed: boolean
-
   constructor(id?: string, title?: string) {
     this._id = id || `id_${nanoid()}`
     this.title = title || faker.name.lastName()
@@ -76,6 +75,20 @@ export class NodeModel {
     const idx = this.childIds.findIndex(cid => cid === childId)
     this.childIds.splice(idx, 1)
   }
+
+  get hasChildren() {
+    return this.childCount > 0
+  }
+
+  get hasVisibleChildren() {
+    return this.hasChildren && !this.collapsed
+  }
+
+  maybeNextSiblingId(childId: string) {
+    const idx = this.indexOfChildId(childId)
+
+    return idx < this.childCount - 1 ? this.getChildIdAt(idx + 1) : null
+  }
 }
 
 export class Store {
@@ -87,7 +100,7 @@ export class Store {
     this.appendNewChild()
     this.attemptGoUp()
     this.appendNewChild()
-    this.getNodeById = this.getNodeById.bind(this)
+    this.maybeNodeWithId = this.maybeNodeWithId.bind(this)
   }
 
   private registerNode(node: NodeModel) {
@@ -95,10 +108,10 @@ export class Store {
   }
 
   public getChildrenOf(node: NodeModel) {
-    return node.childIds.map(this.getNodeById)
+    return node.childIds.map(this.maybeNodeWithId)
   }
 
-  private getNodeById(id: string) {
+  private maybeNodeWithId(id: string) {
     return this.byId[id]
   }
 
@@ -112,7 +125,7 @@ export class Store {
   }
 
   private get selectedNode() {
-    return this.getNodeById(this.selectedId)
+    return this.maybeNodeWithId(this.selectedId)
   }
 
   private get parentOfSelected() {
@@ -159,7 +172,7 @@ export class Store {
 
   @action.bound
   attemptGoUp() {
-    const parentId = this.getParentIdOf(this.selectedNode)
+    const parentId = this.maybeParentIdOf(this.selectedNode)
     if (parentId) {
       this.setSelectedId(parentId)
     }
@@ -174,15 +187,15 @@ export class Store {
     }, {})
   }
 
-  private getParentIdOf(node: NodeModel) {
+  private maybeParentIdOf(node: NodeModel) {
     return this.idToPidLookup[node.id]
   }
 
   private getParentOf(node: NodeModel) {
-    const pid = this.getParentIdOf(node)
-    const parentNode = this.getNodeById(pid)
+    const pid = this.maybeParentIdOf(node)
+    const parentNode = this.maybeNodeWithId(pid)
     if (!parentNode) {
-      console.error('getParentIdOf', node, 'pid', pid, parentNode)
+      console.error('getParentOf', node, 'pid', pid, parentNode)
       throw new Error('Invariant Failed.')
     }
     return parentNode
@@ -200,37 +213,73 @@ export class Store {
     return null
   }
 
-  private get maybeNextSiblingId() {
+  private get maybeNextSiblingIdOfSelected() {
     return this.selectedNodeIdx < this.parentOfSelected.childCount - 1
       ? this.parentOfSelected.getChildIdAt(this.selectedNodeIdx + 1)
       : null
   }
 
-  private get maybeFirstChildId() {
-    return this.selectedNode.maybeFirstChildId
+  private maybeNextSiblingIdOf(node: NodeModel) {
+    const maybeParent = this.maybeParentOf(node)
+    return maybeParent && maybeParent.maybeNextSiblingId(node.id)
   }
 
-  private get maybeParentId() {
-    return this.getParentIdOf(this.selectedNode)
+  private get maybeParentIdOfSelected() {
+    return this.maybeParentIdOf(this.selectedNode)
   }
 
   @action.bound
   goPrev() {
     if (this.isSelectedNodeRoot) return
     this.setSelectedId(
-      this.maybePrevSiblingId || this.maybeParentId || this.selectedId,
+      this.maybePrevSiblingId ||
+        this.maybeParentIdOfSelected ||
+        this.selectedId,
     )
   }
+
+  private get maybeFirstVisibleChildId() {
+    return (
+      this.selectedNode.hasVisibleChildren &&
+      this.selectedNode.maybeFirstChildId
+    )
+  }
+
+  private maybeParentOf(node: NodeModel) {
+    const maybePid = this.maybeParentIdOf(node)
+    return maybePid && this.maybeNodeWithId(maybePid)
+  }
+
+  private maybeNextSiblingOfFirstAncestorOf(
+    node: NodeModel,
+  ): NodeModel | null {
+    const maybeParent = this.maybeParentOf(node)
+    if (maybeParent) {
+      const parent = maybeParent
+      const maybeId = this.maybeNextSiblingIdOf(parent)
+      if (maybeId) {
+        return this.maybeNodeWithId(maybeId)
+      } else {
+        return this.maybeNextSiblingOfFirstAncestorOf(parent)
+      }
+    } else {
+      return null
+    }
+  }
+
   @action.bound
   goNext() {
     this.setSelectedId(
-      this.maybeFirstChildId || this.maybeNextSiblingId || this.selectedId,
+      this.maybeFirstVisibleChildId ||
+        this.maybeNextSiblingIdOfSelected ||
+        this.selectedId,
     )
   }
 
   private get maybePrevSibling() {
     return (
-      this.maybePrevSiblingId && this.getNodeById(this.maybePrevSiblingId)
+      this.maybePrevSiblingId &&
+      this.maybeNodeWithId(this.maybePrevSiblingId)
     )
   }
 
