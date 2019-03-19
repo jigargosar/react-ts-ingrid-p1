@@ -177,13 +177,22 @@ export class Store {
   static create(): Store {
     return new Store()
   }
+
+  @action.bound
+  attemptGoPrev() {}
+  @action.bound
+  attemptGoNext() {}
 }
 
 export function useAppStore() {
   const [store] = useState(Store.create)
   useEffect(() => {
     function kdl(e: KeyboardEvent) {
-      const km = [{ key: 'enter', handler: () => store.addNewNode() }]
+      const km = [
+        { key: 'enter', handler: () => store.addNewNode() },
+        { key: 'up', handler: () => store.attemptGoPrev() },
+        { key: 'down', handler: () => store.attemptGoNext() },
+      ]
 
       km.forEach(({ key, handler }) => {
         if (isHotkey(key, e)) {
