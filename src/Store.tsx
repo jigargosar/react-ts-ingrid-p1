@@ -180,20 +180,17 @@ export class Store {
 
   @action.bound
   addNewNode() {
+    const newNode = NodeModel.createNew()
+    this.registerNode(newNode)
     if (this.isSelectedNodeRoot) {
-      const newNode = NodeModel.createNew()
-      this.registerNode(newNode)
       this.selectedNode.appendChildId(newNode.id)
-      this.setSelectedId(newNode.id)
     } else {
-      const newNode = NodeModel.createNew()
-      this.registerNode(newNode)
-      this.parentOfSelected.insertChildIdAt(
-        this.selectedNodeIdx + 1,
+      this.parentOfSelected.insertNewChildIdAfterExistingChildId(
         newNode.id,
+        this.selectedId,
       )
-      this.setSelectedId(newNode.id)
     }
+    this.setSelectedId(newNode.id)
   }
 
   @action.bound

@@ -84,6 +84,14 @@ export class NodeModel {
     this.childIds.splice(idx, 0, childId)
   }
 
+  public insertNewChildIdAfterExistingChildId(
+    newChildId: string,
+    existingChildId: string,
+  ) {
+    const idx = this.indexOfChildId(existingChildId)
+    this.insertChildIdAt(idx + 1, newChildId)
+  }
+
   getChildIdAt(idx: number) {
     ow(idx, ow.number.integer.greaterThanOrEqual(0))
     return this.childIds[idx]
