@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { action, observable, values } from 'mobx'
 import nanoid from 'nanoid'
 import faker from 'faker'
 import ow from 'ow'
+import isHotkey from 'is-hotkey'
 
 // configure({ enforceActions: 'always', computedRequiresReaction: true })
 
@@ -180,5 +181,21 @@ export class Store {
 
 export function useAppStore() {
   const [store] = useState(Store.create)
+  useEffect(() => {
+    function kdl(e: KeyboardEvent) {
+      const km = [{ key: 'enter', handler: () => store.addNewNode() }]
+
+      km.forEach(({ key, handler }) => {
+        if (isHotkey(key, e)) {
+          e.preventDefault()
+          handler()
+        }
+      })
+    }
+    window.addEventListener('keydown', kdl)
+    return () => {
+      window.removeEventListener('keydown', kdl)
+    }
+  }, [])
   return store
 }

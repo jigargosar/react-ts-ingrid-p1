@@ -2,7 +2,6 @@ import React from 'react'
 import cn from 'classnames'
 import { observer } from 'mobx-react-lite'
 import { NodeModel, Store, useAppStore } from './Store'
-import isHotKey from 'is-hotkey'
 
 type NodeTreeProps = {
   node: NodeModel
@@ -22,16 +21,6 @@ const NodeTree = observer(({ node, store }: NodeTreeProps) => {
         )}
         tabIndex={isSelected ? 0 : -1}
         onFocus={() => store.setSelectedId(node.id)}
-        onKeyDown={e => {
-          const km = [{ key: 'enter', handler: () => store.addNewNode() }]
-
-          km.forEach(({ key, handler }) => {
-            if (isHotKey(key, e.nativeEvent)) {
-              e.preventDefault()
-              handler()
-            }
-          })
-        }}
       >
         {node.displayTitle}
       </div>
