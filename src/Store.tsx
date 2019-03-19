@@ -61,6 +61,11 @@ export class NodeModel {
     ow(idx, ow.number.integer.inRange(0, this.childCount))
     this.childIds.splice(idx, 0, childId)
   }
+
+  getChildIdAt(idx: number) {
+    ow(idx, ow.number.integer.greaterThanOrEqual(0))
+    return this.childIds[idx]
+  }
 }
 
 export class Store {
@@ -178,8 +183,23 @@ export class Store {
     return new Store()
   }
 
+  private get maybePrevSiblingId() {
+    if (this.selectedNodeIdx > 0) {
+      return this.parentOfSelected.getChildIdAt(this.selectedNodeIdx - 1)
+    }
+    return null
+  }
+
+  private get maybeParentId() {
+    return this.getParentIdOf(this.selectedNode)
+  }
+
   @action.bound
-  attemptGoPrev() {}
+  attemptGoPrev() {
+    this.setSelectedId(
+      this.maybePrevSiblingId || this.maybeParentId || this.selectedId,
+    )
+  }
   @action.bound
   attemptGoNext() {}
 }
