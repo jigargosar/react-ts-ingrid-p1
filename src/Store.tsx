@@ -7,6 +7,32 @@ import { NodeModel, NodeModelJSON } from './model/NodeModel'
 
 // configure({ enforceActions: 'always', computedRequiresReaction: true })
 
+class NodeCollection {
+  @observable byId: { [index: string]: NodeModel }
+  constructor(byId: { [index: string]: NodeModel }) {
+    this.byId = byId
+    // this.maybeNodeWithId = this.maybeNodeWithId.bind(this)
+  }
+
+  toJSON() {
+    return Object.values(this.byId).map(node => node.toJSON())
+  }
+
+  fromJSON(json: NodeModelJSON[]) {
+    const byId = json.reduce(
+      (
+        acc: { [index: string]: NodeModel },
+        { _id, title, childIds, collapsed },
+      ) => {
+        acc[_id] = NodeModel.createNew(_id, title, childIds, collapsed)
+        return acc
+      },
+      {},
+    )
+    return new NodeCollection(byId)
+  }
+}
+
 export class Store {
   @observable byId: { [index: string]: NodeModel }
   @observable selectedId: string
