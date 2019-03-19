@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { action, observable, values } from 'mobx'
 import nanoid from 'nanoid'
 import faker from 'faker'
+import ow from 'ow'
 
 // configure({ enforceActions: 'always', computedRequiresReaction: true })
 
@@ -43,6 +44,11 @@ export class NodeModel {
 
   appendChildId(id: string) {
     this.childIds.push(id)
+  }
+
+  indexOfChildId(childId: string) {
+    const idx = this.childIds.indexOf(childId)
+    ow(idx, ow.number.integer.greaterThanOrEqual(0))
   }
 }
 
@@ -88,7 +94,7 @@ export class Store {
   }
 
   private get selectedNodeIdx() {
-    return this.selectedNode
+    return this.parentOfSelected.indexOfChildId(this.selectedId)
   }
 
   private get isSelectedNodeRoot() {
