@@ -22,7 +22,7 @@ const NodeTree = observer(({ node, store }: NodeTreeProps) => {
         tabIndex={isSelected ? 0 : -1}
         onFocus={() => store.setSelectedId(node.id)}
         onKeyDown={e => {
-          const km = [['enter', () => store.appendNewChild()]]
+          const km = [['enter', () => store.addNewNode()]]
         }}
       >
         {node.displayTitle}

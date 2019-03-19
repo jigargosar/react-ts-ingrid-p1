@@ -83,28 +83,27 @@ export class Store {
     return this.getNodeById(this.selectedId)
   }
 
+  private get parentOfSelected() {
+    return this.getParentOf(this.selectedNode)
+  }
+
   private get selectedNodeIdx() {
     return this.selectedNode
   }
 
-  appendNewChild() {
+  private get isSelectedNodeRoot() {
+    return this.selectedNode === this.rootNode
+  }
+
+  public isNodeSelected(node: NodeModel) {
+    return node.id === this.selectedId
+  }
+
+  private appendNewChild() {
     const newNode = NodeModel.createNew()
     this.registerNode(newNode)
     this.selectedNode.appendChildId(newNode.id)
     this.setSelectedId(newNode.id)
-  }
-
-  @action.bound
-  appendNew() {
-    if (this.isSelectedNodeRoot) {
-      this.appendNewChild()
-    } else {
-      this.appendNewSibling()
-    }
-  }
-
-  private get isSelectedNodeRoot() {
-    return this.selectedNode === this.rootNode
   }
 
   private appendNewSibling() {
@@ -112,6 +111,15 @@ export class Store {
     this.registerNode(newNode)
     this.selectedNode.appendChildId(newNode.id)
     this.setSelectedId(newNode.id)
+  }
+
+  @action.bound
+  addNewNode() {
+    if (this.isSelectedNodeRoot) {
+      this.appendNewChild()
+    } else {
+      this.appendNewSibling()
+    }
   }
 
   @action.bound
@@ -143,10 +151,6 @@ export class Store {
       throw new Error('Invariant Failed.')
     }
     return parentNode
-  }
-
-  public isNodeSelected(node: NodeModel) {
-    return node.id === this.selectedId
   }
 
   @action
