@@ -26,7 +26,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 9009 -s public",
+    "storybook": "nodemon -w .storybook/webpack.config.js -x start-storybook -- -p 9009 -s public",
     "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
@@ -42,6 +42,7 @@
     "@babel/core": "^7.3.4",
     "@storybook/addon-actions": "^5.0.3",
     "@storybook/addon-links": "^5.0.3",
+    "@storybook/addon-storysource": "^5.0.3",
     "@storybook/addons": "^5.0.3",
     "@storybook/react": "^5.0.3",
     "@types/classnames": "^2.2.7",
@@ -53,6 +54,7 @@
     "idx.macro": "^3.0.4",
     "lint-staged": "^8.1.5",
     "node-sass": "^4.11.0",
+    "nodemon": "^1.18.10",
     "param.macro": "^3.2.0",
     "prettier": "^1.16.4"
   },
