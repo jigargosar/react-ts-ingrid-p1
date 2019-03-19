@@ -65,7 +65,7 @@ export class NodeModel {
     return NodeModel._rootNode
   }
 
-  appendChildId(id: string) {
+  appendNewChildId(id: string) {
     this.childIds.push(id)
   }
 
@@ -85,8 +85,8 @@ export class NodeModel {
   }
 
   public insertNewChildIdAfter(
-    newChildId: string,
     existingChildId: string,
+    newChildId: string,
   ) {
     const idx = this.indexOfChildId(existingChildId)
     this.insertChildIdAt(idx + 1, newChildId)

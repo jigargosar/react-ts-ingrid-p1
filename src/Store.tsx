@@ -180,9 +180,9 @@ export class Store {
     this.registerNode(newNode)
     const maybeParent = this.maybeParentOfSelected
     if (maybeParent) {
-      maybeParent.insertNewChildIdAfter(newNode.id, this.selectedId)
+      maybeParent.insertNewChildIdAfter(this.selectedId, newNode.id)
     } else {
-      this.selectedNode.appendChildId(newNode.id)
+      this.selectedNode.appendNewChildId(newNode.id)
     }
     this.setSelectedId(newNode.id)
   }
@@ -291,7 +291,7 @@ export class Store {
     const newParent = this.maybePrevSibling
     if (newParent) {
       this.maybeParentOfSelected.removeChildId(this.selectedId)
-      newParent.appendChildId(this.selectedId)
+      newParent.appendNewChildId(this.selectedId)
     }
   }
 
