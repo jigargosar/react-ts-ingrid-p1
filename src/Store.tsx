@@ -70,6 +70,12 @@ export class NodeModel {
   get maybeFirstChildId() {
     return this.childIds.length > 0 ? this.childIds[0] : null
   }
+
+  removeChildId(childId: string) {
+    ow(this.childIds, ow.array.includes(childId))
+    const idx = this.childIds.findIndex(cid => cid === childId)
+    this.childIds.splice(idx, 1)
+  }
 }
 
 export class Store {
@@ -209,17 +215,34 @@ export class Store {
   }
 
   @action.bound
-  attemptGoPrev() {
+  goPrev() {
     if (this.isSelectedNodeRoot) return
     this.setSelectedId(
       this.maybePrevSiblingId || this.maybeParentId || this.selectedId,
     )
   }
   @action.bound
-  attemptGoNext() {
+  goNext() {
     this.setSelectedId(
       this.maybeFirstChildId || this.maybeNextSiblingId || this.selectedId,
     )
+  }
+
+  private get maybePrevSibling() {
+    return (
+      this.maybePrevSiblingId && this.getNodeById(this.maybePrevSiblingId)
+    )
+  }
+
+  @action.bound
+  indent() {
+    if (this.isSelectedNodeRoot) return
+
+    const newParent = this.maybePrevSibling
+    if (newParent) {
+      this.parentOfSelected.removeChildId(this.selectedId)
+      newParent.appendChildId(this.selectedId)
+    }
   }
 }
 
@@ -229,8 +252,9 @@ export function useAppStore() {
     function kdl(e: KeyboardEvent) {
       const km = [
         { key: 'enter', handler: () => store.addNewNode() },
-        { key: 'up', handler: () => store.attemptGoPrev() },
-        { key: 'down', handler: () => store.attemptGoNext() },
+        { key: 'up', handler: () => store.goPrev() },
+        { key: 'down', handler: () => store.goNext() },
+        { key: 'tab', handler: () => store.indent() },
       ]
 
       km.forEach(({ key, handler }) => {
