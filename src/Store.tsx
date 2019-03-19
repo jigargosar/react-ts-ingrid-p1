@@ -55,7 +55,7 @@ export class Store {
     this.appendNewChild()
     this.attemptGoUp()
     this.appendNewChild()
-    this.getById = this.getById.bind(this)
+    this.getNodeById = this.getNodeById.bind(this)
   }
 
   @action.bound
@@ -64,10 +64,10 @@ export class Store {
   }
 
   getChildrenOf(node: NodeModel) {
-    return node.childIds.map(this.getById)
+    return node.childIds.map(this.getNodeById)
   }
 
-  getById(id: string) {
+  getNodeById(id: string) {
     return this.byId[id]
   }
 
@@ -80,12 +80,36 @@ export class Store {
     this.selectedId = sid
   }
 
-  get selectedNode() {
-    return this.getById(this.selectedId)
+  private get selectedNode() {
+    return this.getNodeById(this.selectedId)
+  }
+
+  private get selectedNodeIdx() {
+    return this.selectedNode
   }
 
   @action.bound
   appendNewChild() {
+    const newNode = NodeModel.createNew()
+    this.registerNode(newNode)
+    this.selectedNode.appendChildId(newNode.id)
+    this.setSelectedId(newNode.id)
+  }
+
+  private get isSelectedNodeRoot() {
+    return this.selectedNode === this.rootNode
+  }
+
+  @action.bound
+  appendNew() {
+    if (this.isSelectedNodeRoot) {
+      this.appendNewChild()
+    } else {
+      this.appendNewSibling()
+    }
+  }
+
+  private appendNewSibling() {
     const newNode = NodeModel.createNew()
     this.registerNode(newNode)
     this.selectedNode.appendChildId(newNode.id)
@@ -111,6 +135,16 @@ export class Store {
 
   private getParentIdOf(node: NodeModel) {
     return this.idToPidLookup[node.id]
+  }
+
+  private getParentOf(node: NodeModel) {
+    const pid = this.getParentIdOf(node)
+    const parentNode = this.getNodeById(pid)
+    if (!parentNode) {
+      console.error('getParentIdOf', node, 'pid', pid, parentNode)
+      throw new Error('Invariant Failed.')
+    }
+    return parentNode
   }
 
   isNodeSelected(node: NodeModel) {
