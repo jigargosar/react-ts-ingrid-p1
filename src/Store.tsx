@@ -49,6 +49,16 @@ export class NodeModel {
   indexOfChildId(childId: string) {
     const idx = this.childIds.indexOf(childId)
     ow(idx, ow.number.integer.greaterThanOrEqual(0))
+    return idx
+  }
+
+  get childCount() {
+    return this.childIds.length
+  }
+
+  insertChildIdAt(idx: number, childId: string) {
+    ow(idx, ow.number.integer.inRange(0, this.childCount))
+    this.childIds.splice(idx, 0, childId)
   }
 }
 
@@ -115,7 +125,10 @@ export class Store {
   private appendNewSibling() {
     const newNode = NodeModel.createNew()
     this.registerNode(newNode)
-    this.selectedNode.appendChildId(newNode.id)
+    this.parentOfSelected.insertChildIdAt(
+      this.selectedNodeIdx + 1,
+      newNode.id,
+    )
     this.setSelectedId(newNode.id)
   }
 
