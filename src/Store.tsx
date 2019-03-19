@@ -7,6 +7,13 @@ import isHotkey from 'is-hotkey'
 
 // configure({ enforceActions: 'always', computedRequiresReaction: true })
 
+type NodeModelJSON = {
+  _id: string
+  title: string
+  childIds: string[]
+  collapsed: boolean
+}
+
 export class NodeModel {
   @observable readonly _id: string
   @observable title: string
@@ -41,8 +48,13 @@ export class NodeModel {
     return this.title
   }
 
-  static createNew() {
-    return new NodeModel()
+  static createNew(
+    id?: string,
+    title?: string,
+    childIds?: string[],
+    collapsed?: boolean,
+  ) {
+    return new NodeModel(id, title, childIds, collapsed)
   }
 
   private static _rootNode: NodeModel
@@ -148,7 +160,20 @@ export class Store {
   }
 
   @action
-  static fromJSON() {}
+  static fromJSON(json: { nodes: NodeModelJSON[]; selectedId: string }) {
+    const store = new Store({}, json.selectedId)
+    json.nodes.reduce(
+      (
+        acc: { [index: string]: NodeModel },
+        { _id, title, childIds, collapsed },
+      ) => {
+        acc[_id] = NodeModel.createNew(_id, title, childIds, collapsed)
+        return acc
+      },
+      {},
+    )
+    return store
+  }
 
   toJSON() {
     return {
