@@ -93,6 +93,21 @@ export class NodeModel {
 
     return idx < this.childCount - 1 ? this.getChildIdAt(idx + 1) : null
   }
+
+  collapse() {
+    this.collapsed = true
+  }
+  expand() {
+    this.collapsed = false
+  }
+
+  get canCollapse() {
+    return this.hasVisibleChildren
+  }
+
+  get canExpand() {
+    return this.hasChildren && this.collapsed
+  }
 }
 
 export class Store {
@@ -337,6 +352,24 @@ export class Store {
       this.selectedId,
     )
   }
+
+  @action.bound
+  collapseOrParent() {
+    if (this.selectedNode.canCollapse) {
+      this.selectedNode.collapse()
+    } else {
+      this.attemptGoUp()
+    }
+  }
+
+  @action.bound
+  expandOrNext() {
+    if (this.selectedNode.canExpand) {
+      this.selectedNode.expand()
+    } else {
+      this.goNext()
+    }
+  }
 }
 
 export function useAppStore() {
@@ -349,6 +382,8 @@ export function useAppStore() {
         { key: 'down', handler: () => store.goNext() },
         { key: 'tab', handler: () => store.indent() },
         { key: 'shift+tab', handler: () => store.outdent() },
+        { key: 'left', handler: () => store.collapseOrParent() },
+        { key: 'right', handler: () => store.expandOrNext() },
       ]
 
       km.forEach(({ key, handler }) => {
