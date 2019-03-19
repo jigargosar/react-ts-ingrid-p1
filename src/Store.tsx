@@ -286,8 +286,6 @@ export class Store {
 
   @action.bound
   indent() {
-    if (this.isSelectedNodeRoot) return
-
     const oldParent = this.maybeParentOfSelected
     const newParent = this.maybePrevSibling
     if (oldParent && newParent) {
