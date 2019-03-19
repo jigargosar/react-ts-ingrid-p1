@@ -151,7 +151,7 @@ export class Store {
   }
 
   @action
-  static create(): Store {
+  public static create(): Store {
     const store = new Store({}, NodeModel.rootNodeId)
     store.registerNode(NodeModel.getOrCreateRootNode())
     store.appendNewChild()
@@ -160,8 +160,10 @@ export class Store {
     return store
   }
 
-  @action
-  static fromJSON(json: { nodes: NodeModelJSON[]; selectedId: string }) {
+  private static fromJSON(json: {
+    nodes: NodeModelJSON[]
+    selectedId: string
+  }) {
     const byId = json.nodes.reduce(
       (
         acc: { [index: string]: NodeModel },
@@ -176,7 +178,7 @@ export class Store {
   }
 
   @action
-  static fromCache() {
+  public static fromCache() {
     const cachedJSON = getCached('rts-ingrid-p1')
     return cachedJSON ? Store.fromJSON(cachedJSON) : Store.create()
   }
@@ -438,7 +440,7 @@ export class Store {
 }
 
 export function useAppStore() {
-  const [store] = useState(Store.create)
+  const [store] = useState(Store.fromCache)
   useEffect(() => {
     function kdl(e: KeyboardEvent) {
       const km = [
