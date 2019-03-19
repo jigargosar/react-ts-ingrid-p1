@@ -288,10 +288,12 @@ export class Store {
   indent() {
     if (this.isSelectedNodeRoot) return
 
+    const oldParent = this.maybeParentOfSelected
     const newParent = this.maybePrevSibling
-    if (newParent) {
-      this.maybeParentOfSelected.removeChildId(this.selectedId)
+    if (oldParent && newParent) {
+      oldParent.removeChildId(this.selectedId)
       newParent.appendNewChildId(this.selectedId)
+      newParent.expand()
     }
   }
 
