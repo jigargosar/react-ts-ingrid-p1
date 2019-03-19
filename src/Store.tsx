@@ -162,7 +162,7 @@ export class Store {
     return this.maybeNodeWithId(this.selectedId)
   }
 
-  private get parentOfSelected() {
+  private get maybeParentOfSelected() {
     return this.maybeParentOf(this.selectedNode)
   }
 
@@ -181,7 +181,7 @@ export class Store {
     if (this.isSelectedNodeRoot) {
       this.selectedNode.appendChildId(newNode.id)
     } else {
-      this.parentOfSelected.insertNewChildIdAfterExistingChildId(
+      this.maybeParentOfSelected.insertNewChildIdAfterExistingChildId(
         newNode.id,
         this.selectedId,
       )
@@ -201,11 +201,11 @@ export class Store {
   }
 
   private get maybePrevSiblingIdOfSelected() {
-    return this.parentOfSelected.maybePrevChildId(this.selectedId)
+    return this.maybeParentOfSelected.maybePrevChildId(this.selectedId)
   }
 
   private get maybeNextSiblingIdOfSelected() {
-    return this.parentOfSelected.maybeNextChildId(this.selectedId)
+    return this.maybeParentOfSelected.maybeNextChildId(this.selectedId)
   }
 
   private maybeNextSiblingIdOf(node: NodeModel) {
@@ -286,7 +286,7 @@ export class Store {
 
     const newParent = this.maybePrevSibling
     if (newParent) {
-      this.parentOfSelected.removeChildId(this.selectedId)
+      this.maybeParentOfSelected.removeChildId(this.selectedId)
       newParent.appendChildId(this.selectedId)
     }
   }
