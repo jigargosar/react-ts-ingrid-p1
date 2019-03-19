@@ -150,4 +150,8 @@ export class NodeModel {
   get canExpand() {
     return this.hasChildren && this.collapsed
   }
+
+  public get maybeFirstVisibleChildId() {
+    return this.hasVisibleChildren && this.maybeFirstChildId
+  }
 }

@@ -232,13 +232,6 @@ export class Store {
     )
   }
 
-  private get maybeFirstVisibleChildId() {
-    return (
-      this.selectedNode.hasVisibleChildren &&
-      this.selectedNode.maybeFirstChildId
-    )
-  }
-
   private maybeParentOf(node: NodeModel) {
     const maybePid = this.maybeParentIdOf(node)
     return maybePid && this.maybeNodeWithId(maybePid)
@@ -248,7 +241,7 @@ export class Store {
     return this.nodeCollection.maybeParentIdOfId(nodeId)
   }
 
-  private maybeNextSiblingIdOfFirstAncestorOfNodeId(
+  private maybeNextSiblingIdOfFirstAncestor(
     nodeId: string,
   ): string | null {
     const maybeParentId = this.maybeParentIdOfId(nodeId)
@@ -257,7 +250,7 @@ export class Store {
       const maybeId = this.maybeNextSiblingIdOf(parent)
       return maybeId
         ? maybeId
-        : this.maybeNextSiblingIdOfFirstAncestorOfNodeId(parent.id)
+        : this.maybeNextSiblingIdOfFirstAncestor(parent.id)
     } else {
       return null
     }
@@ -266,9 +259,9 @@ export class Store {
   @action.bound
   goNext() {
     this.setSelectedId(
-      this.maybeFirstVisibleChildId ||
+      this.selectedNode.maybeFirstVisibleChildId ||
         this.maybeNextSiblingIdOfSelected ||
-        this.maybeNextSiblingIdOfFirstAncestorOfNodeId(this.selectedId) ||
+        this.maybeNextSiblingIdOfFirstAncestor(this.selectedId) ||
         this.selectedId,
     )
   }
