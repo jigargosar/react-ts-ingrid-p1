@@ -195,8 +195,6 @@ export class Store {
   }
 
   private get maybeNextSiblingId() {
-    if (!this.maybeParentId) return
-
     return this.selectedNodeIdx < this.parentOfSelected.childCount - 1
       ? this.parentOfSelected.getChildIdAt(this.selectedNodeIdx + 1)
       : null
@@ -212,6 +210,7 @@ export class Store {
 
   @action.bound
   attemptGoPrev() {
+    if (this.isSelectedNodeRoot) return
     this.setSelectedId(
       this.maybePrevSiblingId || this.maybeParentId || this.selectedId,
     )
