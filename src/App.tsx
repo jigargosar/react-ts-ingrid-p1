@@ -25,7 +25,7 @@ const NodeTree = observer(({ node, store }: NodeTreeProps) => {
         {node.displayTitle}
       </div>
       <div className="pl4">
-        {store.getChildrenOf(node).map(childNode => (
+        {store.getVisibleChildrenOf(node).map(childNode => (
           <NodeTree key={childNode.id} node={childNode} store={store} />
         ))}
       </div>

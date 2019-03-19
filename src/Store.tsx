@@ -126,7 +126,11 @@ export class Store {
     this.byId[node.id] = node
   }
 
-  public getChildrenOf(node: NodeModel) {
+  public getVisibleChildrenOf(node: NodeModel) {
+    return node.canCollapse ? this.getChildNodesOf(node) : []
+  }
+
+  private getChildNodesOf(node: NodeModel) {
     return node.childIds.map(this.maybeNodeWithId)
   }
 
