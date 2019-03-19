@@ -21,4 +21,3 @@ storiesOf('Button', module)
       </span>
     </Button>
   ))
-  .addLiveSource('demo', `return <div>asdf</div>`)
