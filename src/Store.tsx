@@ -250,17 +250,21 @@ export class Store {
     return maybePid && this.maybeNodeWithId(maybePid)
   }
 
-  private maybeNextSiblingOfFirstAncestorOf(
-    node: NodeModel,
-  ): NodeModel | null {
-    const maybeParent = this.maybeParentOf(node)
-    if (maybeParent) {
-      const parent = maybeParent
+  private maybeParentIdOfId(nodeId: string) {
+    return this.idToPidLookup[nodeId]
+  }
+
+  private maybeNextSiblingIdOfFirstAncestorOfNodeId(
+    nodeId: string,
+  ): string | null {
+    const maybeParentId = this.maybeParentIdOfId(nodeId)
+    if (maybeParentId) {
+      const parent = this.maybeNodeWithId(maybeParentId)
       const maybeId = this.maybeNextSiblingIdOf(parent)
       if (maybeId) {
-        return this.maybeNodeWithId(maybeId)
+        return maybeId
       } else {
-        return this.maybeNextSiblingOfFirstAncestorOf(parent)
+        return this.maybeNextSiblingIdOfFirstAncestorOfNodeId(parent.id)
       }
     } else {
       return null
@@ -272,6 +276,7 @@ export class Store {
     this.setSelectedId(
       this.maybeFirstVisibleChildId ||
         this.maybeNextSiblingIdOfSelected ||
+        this.maybeNextSiblingIdOfFirstAncestorOfNodeId(this.selectedId) ||
         this.selectedId,
     )
   }
