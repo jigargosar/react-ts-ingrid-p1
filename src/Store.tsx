@@ -163,7 +163,7 @@ export class Store {
   }
 
   private get parentOfSelected() {
-    return this.getParentOf(this.selectedNode)
+    return this.maybeParentOf(this.selectedNode)
   }
 
   private get isSelectedNodeRoot() {
@@ -198,16 +198,6 @@ export class Store {
 
   private maybeParentIdOf(node: NodeModel) {
     return this.nodeCollection.maybeParentIdOf(node)
-  }
-
-  private getParentOf(node: NodeModel) {
-    const pid = this.maybeParentIdOf(node)
-    const parentNode = this.maybeNodeWithId(pid)
-    if (!parentNode) {
-      console.error('getParentOf', node, 'pid', pid, parentNode)
-      throw new Error('Invariant Failed.')
-    }
-    return parentNode
   }
 
   private get maybePrevSiblingIdOfSelected() {
