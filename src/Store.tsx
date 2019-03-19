@@ -17,7 +17,7 @@ class NodeCollection {
     return Object.values(this.byId).map(node => node.toJSON())
   }
 
-  fromJSON(json: NodeModelJSON[]) {
+  static fromJSON(json: NodeModelJSON[]) {
     const byId = json.reduce(
       (
         acc: { [index: string]: NodeModel },
@@ -31,7 +31,7 @@ class NodeCollection {
     return new NodeCollection(byId)
   }
 
-  private registerNode(node: NodeModel) {
+  registerNode(node: NodeModel) {
     this.byId[node.id] = node
   }
 
@@ -43,7 +43,7 @@ class NodeCollection {
     return node.childIds.map(childNode => this.maybeNodeWithId(childNode))
   }
 
-  private maybeNodeWithId(id: string) {
+  maybeNodeWithId(id: string) {
     return this.byId[id]
   }
 
@@ -60,7 +60,11 @@ class NodeCollection {
     }, {})
   }
 
-  private maybeParentIdOf(node: NodeModel) {
+  maybeParentIdOfId(nodeId: string) {
+    return this.idToPidLookup[nodeId]
+  }
+
+  maybeParentIdOf(node: NodeModel) {
     return this.idToPidLookup[node.id]
   }
 
@@ -68,25 +72,32 @@ class NodeCollection {
     const pid = this.maybeParentIdOf(node)
     return pid && this.maybeNodeWithId(pid)
   }
+
+  private isRootNode(node: NodeModel) {
+    return this.rootNode === node
+  }
+
+  static create() {
+    const nodeCollection = new NodeCollection({})
+    nodeCollection.registerNode(NodeModel.getOrCreateRootNode())
+    return nodeCollection
+  }
 }
 
 export class Store {
-  @observable byId: { [index: string]: NodeModel }
+  @observable nodeCollection: NodeCollection
   @observable selectedId: string
 
-  private constructor(
-    byId: { [index: string]: NodeModel },
-    selectedId: string,
-  ) {
-    this.byId = byId
+  private constructor(nodeCollection: NodeCollection, selectedId: string) {
+    this.nodeCollection = nodeCollection
     this.selectedId = selectedId
     this.maybeNodeWithId = this.maybeNodeWithId.bind(this)
   }
 
   @action
   public static create(): Store {
-    const store = new Store({}, NodeModel.rootNodeId)
-    store.registerNode(NodeModel.getOrCreateRootNode())
+    const store = new Store(NodeCollection.create(), NodeModel.rootNodeId)
+
     store.appendNewChild()
     store.attemptGoUp()
     store.appendNewChild()
@@ -107,7 +118,7 @@ export class Store {
       },
       {},
     )
-    return new Store(byId, json.selectedId)
+    return new Store(NodeCollection.fromJSON(json.nodes), json.selectedId)
   }
 
   @action
@@ -117,13 +128,13 @@ export class Store {
 
   toJSON() {
     return {
-      nodes: Object.values(this.byId).map(node => node.toJSON()),
+      nodes: this.nodeCollection.toJSON(),
       selectedId: this.selectedId,
     }
   }
 
   private registerNode(node: NodeModel) {
-    this.byId[node.id] = node
+    this.nodeCollection.registerNode(node)
   }
 
   public getVisibleChildrenOf(node: NodeModel) {
@@ -135,11 +146,11 @@ export class Store {
   }
 
   private maybeNodeWithId(id: string) {
-    return this.byId[id]
+    return this.nodeCollection.maybeNodeWithId(id)
   }
 
   public get rootNode() {
-    return this.byId[NodeModel.rootNodeId]
+    return this.nodeCollection.rootNode
   }
 
   @action.bound
@@ -201,17 +212,8 @@ export class Store {
     }
   }
 
-  private get idToPidLookup() {
-    return values(this.byId).reduce((acc, node) => {
-      node.childIds.forEach((cid: string) => {
-        acc[cid] = node.id
-      })
-      return acc
-    }, {})
-  }
-
   private maybeParentIdOf(node: NodeModel) {
-    return this.idToPidLookup[node.id]
+    return this.nodeCollection.maybeParentIdOf(node)
   }
 
   private getParentOf(node: NodeModel) {
@@ -272,7 +274,7 @@ export class Store {
   }
 
   private maybeParentIdOfId(nodeId: string) {
-    return this.idToPidLookup[nodeId]
+    return this.nodeCollection.maybeParentIdOfId(nodeId)
   }
 
   private maybeNextSiblingIdOfFirstAncestorOfNodeId(
