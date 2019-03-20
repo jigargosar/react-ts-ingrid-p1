@@ -125,8 +125,9 @@ export class Store {
   }
 
   private get maybeParentIdOfSelected() {
-    const parent = this.nodeCollection.maybeParentOf(this.selectedNode)
-    return parent && parent.id
+    return fromNullable(
+      this.nodeCollection.maybeParentOf(this.selectedNode),
+    ).map(p => p.id)
   }
 
   maybeLastVisibleDescendentIdOfPrevOfSelected() {
@@ -139,7 +140,7 @@ export class Store {
   goPrev() {
     this.setSelectedId(
       this.maybeLastVisibleDescendentIdOfPrevOfSelected()
-        .orElse(() => fromNullable(this.maybeParentIdOfSelected))
+        .orElse(() => this.maybeParentIdOfSelected)
         .getOrElse(this.selectedId),
     )
   }
