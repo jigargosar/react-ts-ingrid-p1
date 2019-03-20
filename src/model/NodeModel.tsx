@@ -2,6 +2,7 @@ import { observable } from 'mobx'
 import nanoid from 'nanoid'
 import faker from 'faker'
 import ow from 'ow'
+import { none, some } from 'fp-ts/lib/Option'
 
 export type NodeModelJSON = {
   _id: string
@@ -108,7 +109,7 @@ export class NodeModel {
   }
 
   get maybeFirstChildId() {
-    return this.childIds.length > 0 ? this.childIds[0] : null
+    return this.childIds.length > 0 ? some(this.childIds[0]) : none
   }
 
   removeChildId(childId: string) {
@@ -152,6 +153,6 @@ export class NodeModel {
   }
 
   public get maybeFirstVisibleChildId() {
-    return this.hasVisibleChildren && this.maybeFirstChildId
+    return this.hasVisibleChildren ? this.maybeFirstChildId : none
   }
 }

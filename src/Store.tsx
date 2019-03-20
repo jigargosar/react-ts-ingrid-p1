@@ -159,10 +159,15 @@ export class Store {
   @action.bound
   goNext() {
     this.setSelectedId(
-      this.selectedNode.maybeFirstVisibleChildId ||
-        this.maybeNextSiblingIdOfSelected ||
-        this.maybeNextSiblingIdOfFirstAncestor(this.selectedId) ||
-        this.selectedId,
+      this.selectedNode.maybeFirstVisibleChildId
+        .orElse(() => fromNullable(this.maybeNextSiblingIdOfSelected))
+        .orElse(() =>
+          fromNullable(
+            this.maybeNextSiblingIdOfFirstAncestor(this.selectedId),
+          ),
+        )
+
+        .getOrElse(this.selectedId),
     )
   }
 
