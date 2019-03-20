@@ -68,6 +68,10 @@ export class NodeCollection {
     return node.childIds.map(child => this.maybeNodeWithId(child))
   }
 
+  public getVisibleChildrenOf(node: NodeModel) {
+    return node.hasVisibleChildren ? this.getChildNodesOf(node) : []
+  }
+
   static create() {
     const nodeCollection = new NodeCollection({})
     nodeCollection.registerNode(NodeModel.getOrCreateRootNode())

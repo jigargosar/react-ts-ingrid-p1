@@ -52,9 +52,7 @@ export class Store {
   }
 
   public getVisibleChildrenOf(node: NodeModel) {
-    return node.hasVisibleChildren
-      ? this.nodeCollection.getChildNodesOf(node)
-      : []
+    return this.nodeCollection.getVisibleChildrenOf(node)
   }
 
   private maybeNodeWithId(id: string) {
