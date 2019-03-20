@@ -51,7 +51,7 @@ export class NodeCollection {
     return this.idToPidLookup[nodeId]
   }
 
-  maybeParentOf(node: NodeModel) {
+  nullableParentOf(node: NodeModel) {
     return this.maybeParentOfId(node.id)
   }
 

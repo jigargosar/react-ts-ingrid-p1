@@ -74,7 +74,11 @@ export class Store {
   }
 
   private get nullableParentOfSelected() {
-    return this.nodeCollection.maybeParentOf(this.selectedNode)
+    return this.nodeCollection.nullableParentOf(this.selectedNode)
+  }
+
+  private get maybeParentOfSelected() {
+    return this.nodeCollection.nullableParentOf(this.selectedNode)
   }
 
   private get isSelectedNodeRoot() {
@@ -113,13 +117,13 @@ export class Store {
   }
 
   private maybeNextSiblingIdOf(node: NodeModel) {
-    const maybeParent = this.nodeCollection.maybeParentOf(node)
+    const maybeParent = this.nodeCollection.nullableParentOf(node)
     return maybeParent && maybeParent.maybeNextSiblingId(node.id)
   }
 
   private get maybeParentIdOfSelected() {
     return fromNullable(
-      this.nodeCollection.maybeParentOf(this.selectedNode),
+      this.nodeCollection.nullableParentOf(this.selectedNode),
     ).map(p => p.id)
   }
 
@@ -203,12 +207,14 @@ export class Store {
     if (
       this.isSelectedNodeRoot ||
       this.rootNode ===
-        this.nodeCollection.maybeParentOf(this.selectedNode)
+        this.nodeCollection.nullableParentOf(this.selectedNode)
     )
       return
 
-    const oldParent = this.nodeCollection.maybeParentOf(this.selectedNode)
-    const grandParent = this.nodeCollection.maybeParentOf(oldParent)
+    const oldParent = this.nodeCollection.nullableParentOf(
+      this.selectedNode,
+    )
+    const grandParent = this.nodeCollection.nullableParentOf(oldParent)
 
     oldParent.removeChildId(this.selectedId)
 
