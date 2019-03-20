@@ -30,14 +30,6 @@ export class NodeCollection {
     this.byId[node.id] = node
   }
 
-  public getVisibleChildrenOf(node: NodeModel) {
-    return node.hasVisibleChildren ? this.getChildNodesOf(node) : []
-  }
-
-  private getChildNodesOf(node: NodeModel) {
-    return node.childIds.map(childNode => this.maybeNodeWithId(childNode))
-  }
-
   maybeNodeWithId(id: string) {
     return this.byId[id]
   }
@@ -58,6 +50,7 @@ export class NodeCollection {
   maybeParentIdOfId(nodeId: string) {
     return this.idToPidLookup[nodeId]
   }
+
   maybeParentOf(node: NodeModel) {
     const pid = this.maybeParentIdOfId(node.id)
     return pid && this.maybeNodeWithId(pid)
