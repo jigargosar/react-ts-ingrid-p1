@@ -5,6 +5,7 @@ import { getCached, setCache } from './cache-helpers'
 import { useDisposable } from 'mobx-react-lite'
 import { NodeModel, NodeModelJSON } from './model/NodeModel'
 import { NodeCollection } from './model/NodeCollection'
+import { fromNullable } from 'fp-ts/lib/Option'
 
 // configure({ enforceActions: 'always', computedRequiresReaction: true })
 
@@ -103,6 +104,7 @@ export class Store {
       this.setSelectedId(parent.id)
     }
   }
+
   private get maybePrevSiblingIdOfSelected() {
     return (
       this.maybeParentOfSelected &&
@@ -135,9 +137,9 @@ export class Store {
   @action.bound
   goPrev() {
     this.setSelectedId(
-      this.maybeLastVisibleDescendentIdOfPrevOfSelected() ||
-        this.maybeParentIdOfSelected ||
-        this.selectedId,
+      fromNullable(this.maybeLastVisibleDescendentIdOfPrevOfSelected())
+        .orElse(() => fromNullable(this.maybeParentIdOfSelected))
+        .getOrElse(this.selectedId),
     )
   }
 
@@ -264,6 +266,7 @@ export function useAppStore() {
         }
       })
     }
+
     window.addEventListener('keydown', kdl)
     return () => {
       window.removeEventListener('keydown', kdl)
