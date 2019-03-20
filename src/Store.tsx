@@ -99,7 +99,7 @@ export class Store {
   }
 
   private attemptGoUp() {
-    const parent = this.nodeCollection.maybeParentOf(this.selectedNode)
+    const parent = this.nullableParentOfSelected
     if (parent) {
       this.setSelectedId(parent.id)
     }
