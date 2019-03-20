@@ -93,12 +93,19 @@ export class Store {
   addNewNode() {
     const newNode = NodeModel.createNew()
     this.registerNode(newNode)
-    const maybeParent = this.nullableParentOfSelected
-    if (maybeParent) {
-      maybeParent.insertNewChildIdAfter(this.selectedId, newNode.id)
-    } else {
-      this.selectedNode.appendNewChildId(newNode.id)
-    }
+
+    this.maybeParentOfSelected
+      .map(p => p.insertNewChildIdAfter(this.selectedId, newNode.id))
+      .orElse(() =>
+        fromNullable(this.selectedNode.appendNewChildId(newNode.id)),
+      )
+
+    // const maybeParent = this.nullableParentOfSelected
+    // if (maybeParent) {
+    //   maybeParent.insertNewChildIdAfter(this.selectedId, newNode.id)
+    // } else {
+    //   this.selectedNode.appendNewChildId(newNode.id)
+    // }
     this.setSelectedId(newNode.id)
   }
 
