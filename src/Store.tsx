@@ -23,8 +23,7 @@ export class Store {
     this.maybeNodeWithId = this.maybeNodeWithId.bind(this)
   }
 
-  @action
-  public static create(): Store {
+  private static create(): Store {
     const store = new Store(NodeCollection.create(), NodeModel.rootNodeId)
 
     store.addNewNode()
