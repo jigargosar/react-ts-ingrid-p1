@@ -69,6 +69,12 @@ export class Store {
     this.selectedId = sid
   }
 
+  private setMaybeSelectedId(maybeSid: Option<string>) {
+    maybeSid.map(sid => {
+      this.selectedId = sid
+    })
+  }
+
   private get selectedNode() {
     return this.maybeNodeWithId(this.selectedId)
   }
