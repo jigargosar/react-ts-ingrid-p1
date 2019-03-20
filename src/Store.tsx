@@ -73,7 +73,7 @@ export class Store {
   }
 
   private get maybeParentOfSelected() {
-    return this.maybeParentOf(this.selectedNode)
+    return this.nodeCollection.maybeParentOf(this.selectedNode)
   }
 
   private get isSelectedNodeRoot() {
@@ -98,7 +98,7 @@ export class Store {
   }
 
   private attemptGoUp() {
-    const parent = this.maybeParentOf(this.selectedNode)
+    const parent = this.nodeCollection.maybeParentOf(this.selectedNode)
     if (parent) {
       this.setSelectedId(parent.id)
     }
@@ -118,7 +118,7 @@ export class Store {
   }
 
   private maybeNextSiblingIdOf(node: NodeModel) {
-    const maybeParent = this.maybeParentOf(node)
+    const maybeParent = this.nodeCollection.maybeParentOf(node)
     return maybeParent && maybeParent.maybeNextSiblingId(node.id)
   }
 
@@ -139,10 +139,6 @@ export class Store {
         this.maybeParentIdOfSelected ||
         this.selectedId,
     )
-  }
-
-  private maybeParentOf(node: NodeModel) {
-    return this.nodeCollection.maybeParentOf(node)
   }
 
   private maybeNextSiblingIdOfFirstAncestor(
@@ -205,12 +201,13 @@ export class Store {
   outdent() {
     if (
       this.isSelectedNodeRoot ||
-      this.rootNode === this.maybeParentOf(this.selectedNode)
+      this.rootNode ===
+        this.nodeCollection.maybeParentOf(this.selectedNode)
     )
       return
 
-    const oldParent = this.maybeParentOf(this.selectedNode)
-    const grandParent = this.maybeParentOf(oldParent)
+    const oldParent = this.nodeCollection.maybeParentOf(this.selectedNode)
+    const grandParent = this.nodeCollection.maybeParentOf(oldParent)
 
     oldParent.removeChildId(this.selectedId)
 
