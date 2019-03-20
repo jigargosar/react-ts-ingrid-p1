@@ -73,7 +73,7 @@ export class Store {
     return this.maybeNodeWithId(this.selectedId)
   }
 
-  private get maybeParentOfSelected() {
+  private get nullableParentOfSelected() {
     return this.nodeCollection.maybeParentOf(this.selectedNode)
   }
 
@@ -89,7 +89,7 @@ export class Store {
   addNewNode() {
     const newNode = NodeModel.createNew()
     this.registerNode(newNode)
-    const maybeParent = this.maybeParentOfSelected
+    const maybeParent = this.nullableParentOfSelected
     if (maybeParent) {
       maybeParent.insertNewChildIdAfter(this.selectedId, newNode.id)
     } else {
@@ -107,8 +107,8 @@ export class Store {
 
   private get maybePrevSiblingIdOfSelected() {
     return (
-      this.maybeParentOfSelected &&
-      this.maybeParentOfSelected.maybePrevChildId(this.selectedId)
+      this.nullableParentOfSelected &&
+      this.nullableParentOfSelected.maybePrevChildId(this.selectedId)
     )
   }
 
@@ -153,7 +153,7 @@ export class Store {
   goNext() {
     const sid = this.selectedNode.maybeFirstVisibleChildId
       .orElse(() =>
-        fromNullable(this.maybeParentOfSelected).chain(parent =>
+        fromNullable(this.nullableParentOfSelected).chain(parent =>
           parent.maybeNextChildId(this.selectedId),
         ),
       )
@@ -176,7 +176,7 @@ export class Store {
 
   @action.bound
   indent() {
-    const oldParent = this.maybeParentOfSelected
+    const oldParent = this.nullableParentOfSelected
     const newParent = this.maybePrevSibling
     if (oldParent && newParent) {
       oldParent.removeChildId(this.selectedId)
