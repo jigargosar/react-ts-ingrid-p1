@@ -78,7 +78,7 @@ export class Store {
   }
 
   private get maybeParentOfSelected() {
-    return this.nodeCollection.nullableParentOf(this.selectedNode)
+    return this.nodeCollection.maybeParentOf(this.selectedNode)
   }
 
   private get isSelectedNodeRoot() {

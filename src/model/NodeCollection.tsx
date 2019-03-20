@@ -1,5 +1,6 @@
 import { observable, values } from 'mobx'
 import { NodeModel, NodeModelJSON } from './NodeModel'
+import { fromNullable } from 'fp-ts/lib/Option'
 
 export class NodeCollection {
   @observable byId: { [index: string]: NodeModel }
@@ -53,6 +54,10 @@ export class NodeCollection {
 
   nullableParentOf(node: NodeModel) {
     return this.maybeParentOfId(node.id)
+  }
+
+  maybeParentOf(node: NodeModel) {
+    return fromNullable(this.maybeParentOfId(node.id))
   }
 
   maybeParentOfId(nodeId: string) {
