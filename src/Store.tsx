@@ -32,16 +32,6 @@ export class Store {
     nodes: NodeModelJSON[]
     selectedId: string
   }) {
-    json.nodes.reduce(
-      (
-        acc: { [index: string]: NodeModel },
-        { _id, title, childIds, collapsed },
-      ) => {
-        acc[_id] = NodeModel.createNew(_id, title, childIds, collapsed)
-        return acc
-      },
-      {},
-    )
     return new Store(NodeCollection.fromJSON(json.nodes), json.selectedId)
   }
 
