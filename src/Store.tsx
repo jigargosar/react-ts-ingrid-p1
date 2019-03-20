@@ -5,7 +5,7 @@ import { getCached, setCache } from './cache-helpers'
 import { useDisposable } from 'mobx-react-lite'
 import { NodeModel, NodeModelJSON } from './model/NodeModel'
 import { NodeCollection } from './model/NodeCollection'
-import { fromNullable, none, Option } from 'fp-ts/lib/Option'
+import { fromNullable, Option } from 'fp-ts/lib/Option'
 
 // configure({ enforceActions: 'always', computedRequiresReaction: true })
 
@@ -141,15 +141,12 @@ export class Store {
   private maybeNextSiblingIdOfFirstAncestor(
     nodeId: string,
   ): Option<string> {
-    const maybeParent = this.nodeCollection.maybeParentOfId(nodeId)
-    if (maybeParent) {
-      const parent = maybeParent
-      return fromNullable(this.maybeNextSiblingIdOf(parent)).orElse(() =>
-        this.maybeNextSiblingIdOfFirstAncestor(parent.id),
-      )
-    } else {
-      return none
-    }
+    return fromNullable(this.nodeCollection.maybeParentOfId(nodeId)).chain(
+      parent =>
+        fromNullable(this.maybeNextSiblingIdOf(parent)).orElse(() =>
+          this.maybeNextSiblingIdOfFirstAncestor(parent.id),
+        ),
+    )
   }
 
   @action.bound
