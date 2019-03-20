@@ -148,8 +148,7 @@ export class Store {
   }
 
   private maybeParentOf(node: NodeModel) {
-    const maybePid = this.maybeParentIdOf(node)
-    return maybePid && this.maybeNodeWithId(maybePid)
+    return this.nodeCollection.maybeParentOf(node)
   }
 
   private maybeNextSiblingIdOfFirstAncestor(
