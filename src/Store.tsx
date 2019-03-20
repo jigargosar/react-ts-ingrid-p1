@@ -130,16 +130,12 @@ export class Store {
     ).map(p => p.id)
   }
 
-  maybeLastVisibleDescendentIdOfPrevOfSelected() {
-    return fromNullable(this.maybePrevSiblingIdOfSelected).map(
-      this.getLastVisibleDescendentIdOrSelf,
-    )
-  }
-
   @action.bound
   goPrev() {
     this.setSelectedId(
-      this.maybeLastVisibleDescendentIdOfPrevOfSelected()
+      fromNullable(this.maybePrevSiblingIdOfSelected)
+        .map(this.getLastVisibleDescendentIdOrSelf)
+
         .orElse(() => this.maybeParentIdOfSelected)
         .getOrElse(this.selectedId),
     )
