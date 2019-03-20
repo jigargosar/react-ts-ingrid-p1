@@ -64,7 +64,7 @@ export class NodeCollection {
     return this.rootNode === node
   }
 
-  getChildNodesOf(node: NodeModel) {
+  private getChildNodesOf(node: NodeModel) {
     return node.childIds.map(child => this.maybeNodeWithId(child))
   }
 
