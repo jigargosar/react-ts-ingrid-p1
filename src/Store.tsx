@@ -157,7 +157,7 @@ export class Store {
   goNext() {
     const sid = this.selectedNode.maybeFirstVisibleChildId
       .orElse(() =>
-        fromNullable(this.nullableParentOfSelected).chain(parent =>
+        this.maybeParentOfSelected.chain(parent =>
           parent.maybeNextChildId(this.selectedId),
         ),
       )
