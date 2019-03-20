@@ -110,10 +110,9 @@ export class Store {
   }
 
   private attemptGoUp() {
-    const parent = this.nullableParentOfSelected
-    if (parent) {
-      this.setSelectedId(parent.id)
-    }
+    const maybeId = this.maybeParentOfSelected.map(p => p.id)
+
+    this.setMaybeSelectedId(maybeId)
   }
 
   private get maybePrevSiblingIdOfSelected() {
