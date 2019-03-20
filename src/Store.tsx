@@ -152,14 +152,10 @@ export class Store {
     return maybePid && this.maybeNodeWithId(maybePid)
   }
 
-  private maybeParentIdOfId(nodeId: string) {
-    return this.nodeCollection.maybeParentIdOfId(nodeId)
-  }
-
   private maybeNextSiblingIdOfFirstAncestor(
     nodeId: string,
   ): string | null {
-    const maybeParentId = this.maybeParentIdOfId(nodeId)
+    const maybeParentId = this.nodeCollection.maybeParentIdOfId(nodeId)
     if (maybeParentId) {
       const parent = this.maybeNodeWithId(maybeParentId)
       const maybeId = this.maybeNextSiblingIdOf(parent)
