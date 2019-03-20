@@ -32,7 +32,7 @@ export class Store {
     nodes: NodeModelJSON[]
     selectedId: string
   }) {
-    const byId = json.nodes.reduce(
+    json.nodes.reduce(
       (
         acc: { [index: string]: NodeModel },
         { _id, title, childIds, collapsed },
