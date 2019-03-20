@@ -99,6 +99,7 @@ export class Store {
       .orElse(() =>
         fromNullable(this.selectedNode.appendNewChildId(newNode.id)),
       )
+
     this.setSelectedId(newNode.id)
   }
 
