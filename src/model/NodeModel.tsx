@@ -100,7 +100,7 @@ export class NodeModel {
 
   public maybeNextChildId(existingChildId: string) {
     const idx = this.indexOfChildId(existingChildId)
-    return idx < this.childCount - 1 ? this.childIds[idx + 1] : null
+    return idx < this.childCount - 1 ? some(this.childIds[idx + 1]) : none
   }
 
   getChildIdAt(idx: number) {

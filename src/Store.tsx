@@ -151,21 +151,20 @@ export class Store {
 
   @action.bound
   goNext() {
-    this.setSelectedId(
-      this.selectedNode.maybeFirstVisibleChildId
-        .orElse(() =>
-          fromNullable(this.maybeParentOfSelected).mapNullable(_ =>
-            _.maybeNextChildId(this.selectedId),
-          ),
-        )
-        .orElse(() =>
-          fromNullable(
-            this.maybeNextSiblingIdOfFirstAncestor(this.selectedId),
-          ),
-        )
+    const sid = this.selectedNode.maybeFirstVisibleChildId
+      .orElse(() =>
+        fromNullable(this.maybeParentOfSelected).chain(parent =>
+          parent.maybeNextChildId(this.selectedId),
+        ),
+      )
+      .orElse(() =>
+        fromNullable(
+          this.maybeNextSiblingIdOfFirstAncestor(this.selectedId),
+        ),
+      )
 
-        .getOrElse(this.selectedId),
-    )
+      .getOrElse(this.selectedId)
+    this.setSelectedId(sid)
   }
 
   private get maybePrevSibling() {
