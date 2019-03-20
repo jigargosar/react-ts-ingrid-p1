@@ -68,7 +68,7 @@ export class NodeCollection {
     return pid && this.maybeNodeWithId(pid)
   }
 
-  private isRootNode(node: NodeModel) {
+  isRootNode(node: NodeModel) {
     return this.rootNode === node
   }
 

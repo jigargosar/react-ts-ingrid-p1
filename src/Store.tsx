@@ -82,7 +82,7 @@ export class Store {
   }
 
   private get isSelectedNodeRoot() {
-    return this.selectedNode === this.rootNode
+    return this.nodeCollection.isRootNode(this.selectedNode)
   }
 
   public isNodeSelected(node: NodeModel) {
