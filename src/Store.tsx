@@ -8,6 +8,11 @@ import { NodeCollection } from './model/NodeCollection'
 
 // configure({ enforceActions: 'always', computedRequiresReaction: true })
 
+type StoreJSON = {
+  nodes: NodeModelJSON[]
+  selectedId: string
+}
+
 export class Store {
   @observable nodeCollection: NodeCollection
   @observable selectedId: string
@@ -28,10 +33,7 @@ export class Store {
     return store
   }
 
-  private static fromJSON(json: {
-    nodes: NodeModelJSON[]
-    selectedId: string
-  }) {
+  private static fromJSON(json: StoreJSON) {
     return new Store(NodeCollection.fromJSON(json.nodes), json.selectedId)
   }
 
