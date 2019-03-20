@@ -132,12 +132,15 @@ export class Store {
     return parent && parent.id
   }
 
+  maybeLastVisibleDescendentIdOfPrevOfSelected() {
+    const maybeId = this.maybePrevSiblingIdOfSelected
+    return maybeId && this.getLastVisibleDescendentIdOrSelf(maybeId)
+  }
+
   @action.bound
   goPrev() {
-    const maybeId = this.maybePrevSiblingIdOfSelected
-
     this.setSelectedId(
-      (maybeId && this.getLastVisibleDescendentIdOrSelf(maybeId)) ||
+      this.maybeLastVisibleDescendentIdOfPrevOfSelected() ||
         this.maybeParentIdOfSelected ||
         this.selectedId,
     )
