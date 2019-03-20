@@ -47,17 +47,25 @@ export class NodeCollection {
     }, {})
   }
 
-  maybeParentIdOfId(nodeId: string) {
+  private maybeParentIdOfId(nodeId: string) {
     return this.idToPidLookup[nodeId]
   }
 
   maybeParentOf(node: NodeModel) {
-    const pid = this.maybeParentIdOfId(node.id)
+    return this.maybeParentOfId(node.id)
+  }
+
+  maybeParentOfId(nodeId: string) {
+    const pid = this.maybeParentIdOfId(nodeId)
     return pid && this.maybeNodeWithId(pid)
   }
 
   isRootNode(node: NodeModel) {
     return this.rootNode === node
+  }
+
+  getChildNodesOf(node: NodeModel) {
+    return node.childIds.map(child => this.maybeNodeWithId(child))
   }
 
   static create() {

@@ -20,7 +20,6 @@ export class Store {
   private constructor(nodeCollection: NodeCollection, selectedId: string) {
     this.nodeCollection = nodeCollection
     this.selectedId = selectedId
-    this.maybeNodeWithId = this.maybeNodeWithId.bind(this)
   }
 
   private static create(): Store {
@@ -53,11 +52,9 @@ export class Store {
   }
 
   public getVisibleChildrenOf(node: NodeModel) {
-    return node.hasVisibleChildren ? this.getChildNodesOf(node) : []
-  }
-
-  private getChildNodesOf(node: NodeModel) {
-    return node.childIds.map(this.maybeNodeWithId)
+    return node.hasVisibleChildren
+      ? this.nodeCollection.getChildNodesOf(node)
+      : []
   }
 
   private maybeNodeWithId(id: string) {
@@ -153,9 +150,9 @@ export class Store {
   private maybeNextSiblingIdOfFirstAncestor(
     nodeId: string,
   ): string | null {
-    const maybeParentId = this.nodeCollection.maybeParentIdOfId(nodeId)
-    if (maybeParentId) {
-      const parent = this.maybeNodeWithId(maybeParentId)
+    const maybeParent = this.nodeCollection.maybeParentOfId(nodeId)
+    if (maybeParent) {
+      const parent = maybeParent
       const maybeId = this.maybeNextSiblingIdOf(parent)
       return maybeId
         ? maybeId
