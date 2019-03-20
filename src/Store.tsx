@@ -103,16 +103,11 @@ export class Store {
   }
 
   private attemptGoUp() {
-    const parentId = this.maybeParentIdOf(this.selectedNode)
-    if (parentId) {
-      this.setSelectedId(parentId)
+    const parent = this.maybeParentOf(this.selectedNode)
+    if (parent) {
+      this.setSelectedId(parent.id)
     }
   }
-
-  private maybeParentIdOf(node: NodeModel) {
-    return this.nodeCollection.maybeParentIdOf(node)
-  }
-
   private get maybePrevSiblingIdOfSelected() {
     return (
       this.maybeParentOfSelected &&
@@ -133,7 +128,8 @@ export class Store {
   }
 
   private get maybeParentIdOfSelected() {
-    return this.maybeParentIdOf(this.selectedNode)
+    const parent = this.nodeCollection.maybeParentOf(this.selectedNode)
+    return parent && parent.id
   }
 
   @action.bound

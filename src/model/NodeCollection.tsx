@@ -58,11 +58,6 @@ export class NodeCollection {
   maybeParentIdOfId(nodeId: string) {
     return this.idToPidLookup[nodeId]
   }
-
-  maybeParentIdOf(node: NodeModel) {
-    return this.idToPidLookup[node.id]
-  }
-
   maybeParentOf(node: NodeModel) {
     const pid = this.maybeParentIdOfId(node.id)
     return pid && this.maybeNodeWithId(pid)
