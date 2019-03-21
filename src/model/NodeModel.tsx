@@ -3,7 +3,7 @@ import nanoid from 'nanoid'
 import faker from 'faker'
 import ow from 'ow'
 import { none, Option, some } from 'fp-ts/lib/Option'
-import { findIndex } from 'fp-ts/lib/Array'
+import { findIndex, lookup } from 'fp-ts/lib/Array'
 
 export type NodeModelJSON = {
   _id: string
@@ -83,6 +83,10 @@ export class NodeModel {
     return idx
   }
 
+  private maybeChildIdAt(idx: number) {
+    return lookup(idx, this.childIds)
+  }
+
   private maybeIndexOfChildId(childId: string) {
     return findIndex(this.childIds, cid => cid === childId)
   }
@@ -109,15 +113,17 @@ export class NodeModel {
     return idx > 0 ? this.childIds[idx - 1] : null
   }
 
-  public maybePrevChildId(existingChildId: string) {
-    return this.maybeIndexOfChildId(existingChildId).mapNullable(idx =>
-      idx > 0 ? this.childIds[idx - 1] : null,
+  public maybePrevChildId(existingChildId: string): Option<string> {
+    return this.maybeIndexOfChildId(existingChildId).chain(idx =>
+      this.maybeChildIdAt(idx - 1),
     )
   }
 
   public maybeNextChildId(existingChildId: string) {
-    const idx = this.__indexOfChildId(existingChildId)
-    return idx < this.childCount - 1 ? some(this.childIds[idx + 1]) : none
+    return this.maybeIndexOfChildId(existingChildId).chain(
+      idx => lookup(idx + 1, this.childIds),
+      // idx < this.childCount - 1 ? this.childIds[idx + 1] : null,
+    )
   }
 
   getChildIdAt(idx: number) {
