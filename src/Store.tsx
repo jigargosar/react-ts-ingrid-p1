@@ -151,11 +151,12 @@ export class Store {
   private maybeNextSiblingIdOfFirstAncestor(
     nodeId: string,
   ): Option<string> {
-    return fromNullable(this.nodeCollection.maybeParentOfId(nodeId)).chain(
-      parent =>
-        this.maybeNextSiblingIdOf(parent).orElse(() =>
-          this.maybeNextSiblingIdOfFirstAncestor(parent.id),
-        ),
+    return fromNullable(
+      this.nodeCollection.nullableParentOfId(nodeId),
+    ).chain(parent =>
+      this.maybeNextSiblingIdOf(parent).orElse(() =>
+        this.maybeNextSiblingIdOfFirstAncestor(parent.id),
+      ),
     )
   }
 

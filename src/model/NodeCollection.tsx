@@ -1,6 +1,10 @@
 import { observable, values } from 'mobx'
 import { NodeModel, NodeModelJSON } from './NodeModel'
-import { fromNullable } from 'fp-ts/lib/Option'
+import { Option } from 'fp-ts/lib/Option'
+import ow from 'ow'
+import { lookup } from 'fp-ts/lib/Record'
+import * as strMap from 'fp-ts/lib/StrMap'
+import { StrMap } from 'fp-ts/lib/StrMap'
 
 export class NodeCollection {
   @observable byId: { [index: string]: NodeModel }
@@ -31,15 +35,25 @@ export class NodeCollection {
     this.byId[node.id] = node
   }
 
-  nullableNodeWithId(id: string) {
+  nullableNodeWithId(id: string): NodeModel | undefined {
     return this.byId[id]
   }
 
-  public get rootNode() {
-    return this.byId[NodeModel.rootNodeId]
+  maybeNodeWithId(id: string): Option<NodeModel> {
+    return lookup(id, this.byId)
   }
 
-  private get idToPidLookup() {
+  nodeWithId(id: string): NodeModel {
+    const nullableNode = this.nullableNodeWithId(id)
+    ow(nullableNode, ow.undefined.not)
+    return nullableNode as NodeModel
+  }
+
+  public get rootNode() {
+    return this.nodeWithId(NodeModel.rootNodeId)
+  }
+
+  private get idToPidLookup(): StrMap<string> {
     return values(this.byId).reduce((acc, node) => {
       node.childIds.forEach((cid: string) => {
         acc[cid] = node.id
@@ -48,20 +62,31 @@ export class NodeCollection {
     }, {})
   }
 
-  private maybeParentIdOfId(nodeId: string) {
+  private nullableParentIdOfId(nodeId: string): string | undefined {
+    // @ts-ignore
     return this.idToPidLookup[nodeId]
   }
 
-  nullableParentOf(node: NodeModel) {
-    return this.maybeParentOfId(node.id)
+  private maybeParentIdOfId(nodeId: string) {
+    return strMap.lookup(nodeId, this.idToPidLookup)
   }
 
-  maybeParentOf(node: NodeModel) {
-    return fromNullable(this.maybeParentOfId(node.id))
+  nullableParentOf(node: NodeModel) {
+    return this.nullableParentOfId(node.id)
   }
 
   maybeParentOfId(nodeId: string) {
-    const pid = this.maybeParentIdOfId(nodeId)
+    return this.maybeParentIdOfId(nodeId).chain(id =>
+      this.maybeNodeWithId(id),
+    )
+  }
+
+  maybeParentOf(node: NodeModel) {
+    return this.maybeParentOfId(node.id)
+  }
+
+  nullableParentOfId(nodeId: string) {
+    const pid = this.nullableParentIdOfId(nodeId)
     return pid && this.nullableNodeWithId(pid)
   }
 
