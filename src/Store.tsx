@@ -111,12 +111,6 @@ export class Store {
     )
   }
 
-  private maybeNextSiblingIdOfId(id: string) {
-    return this.nodeCollection
-      .maybeParentOfId(id)
-      .chain(p => p.maybeNextChildId(id))
-  }
-
   @action.bound
   goPrev() {
     this.setMaybeSelectedId(
@@ -130,24 +124,17 @@ export class Store {
 
   @action.bound
   goNext() {
-    const maybeNextSiblingIdOfFirstAncestor = (
-      nodeId: string,
-    ): Option<string> =>
-      this.nodeCollection
-        .maybeParentIdOfId(nodeId)
-        .chain(parentId =>
-          this.maybeNextSiblingIdOfId(parentId).orElse(() =>
-            maybeNextSiblingIdOfFirstAncestor(parentId),
-          ),
-        )
-
     const maybeSid = this.selectedNode.maybeFirstVisibleChildId
       .orElse(() =>
         this.maybeParentOfSelected.chain(parent =>
           parent.maybeNextChildId(this.selectedId),
         ),
       )
-      .orElse(() => maybeNextSiblingIdOfFirstAncestor(this.selectedId))
+      .orElse(() =>
+        this.nodeCollection.maybeNextSiblingIdOfFirstAncestor(
+          this.selectedId,
+        ),
+      )
 
     this.setMaybeSelectedId(maybeSid)
   }

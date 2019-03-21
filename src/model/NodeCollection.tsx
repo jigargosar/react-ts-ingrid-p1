@@ -74,6 +74,20 @@ export class NodeCollection {
     return node.hasVisibleChildren ? this.childNodesOf(node) : []
   }
 
+  public maybeNextSiblingIdOfId(id: string) {
+    return this.maybeParentOfId(id).chain(p => p.maybeNextChildId(id))
+  }
+
+  public maybeNextSiblingIdOfFirstAncestor(
+    nodeId: string,
+  ): Option<string> {
+    return this.maybeParentIdOfId(nodeId).chain(parentId =>
+      this.maybeNextSiblingIdOfId(parentId).orElse(() =>
+        this.maybeNextSiblingIdOfFirstAncestor(parentId),
+      ),
+    )
+  }
+
   static create() {
     const nodeCollection = new NodeCollection({})
     nodeCollection.registerNode(NodeModel.getOrCreateRootNode())
