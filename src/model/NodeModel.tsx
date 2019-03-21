@@ -143,10 +143,6 @@ export class NodeModel {
     return this.hasChildren && !this.collapsed
   }
 
-  get nullableLastVisibleChildId() {
-    return this.hasVisibleChildren && this.childIds[this.childCount - 1]
-  }
-
   get maybeLastVisibleChildId() {
     return this.hasVisibleChildren ? last(this.childIds) : none
   }
