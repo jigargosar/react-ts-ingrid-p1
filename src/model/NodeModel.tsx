@@ -77,6 +77,12 @@ export class NodeModel {
     return idx
   }
 
+  private indexOfChildId(childId: string) {
+    const idx = this.childIds.indexOf(childId)
+    ow(idx, ow.number.integer.greaterThanOrEqual(0))
+    return idx
+  }
+
   private maybeIndexOfChildId(childId: string) {
     return findIndex(this.childIds, cid => cid === childId)
   }
@@ -94,7 +100,7 @@ export class NodeModel {
     existingChildId: string,
     newChildId: string,
   ) {
-    const idx = this.__indexOfChildId(existingChildId)
+    const idx = this.indexOfChildId(existingChildId)
     this.insertChildIdAt(idx + 1, newChildId)
   }
 
@@ -104,8 +110,9 @@ export class NodeModel {
   }
 
   public maybePrevChildId(existingChildId: string) {
-    const idx = this.__indexOfChildId(existingChildId)
-    return idx > 0 ? this.childIds[idx - 1] : null
+    return this.maybeIndexOfChildId(existingChildId).mapNullable(idx =>
+      idx > 0 ? this.childIds[idx - 1] : null,
+    )
   }
 
   public maybeNextChildId(existingChildId: string) {
