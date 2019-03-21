@@ -192,11 +192,11 @@ export class Store {
   private getLastVisibleDescendentIdOrSelf(nodeId: string): string {
     const node = this.maybeNodeWithId(nodeId)
     if (node) {
-      return node.nullableLastVisibleChildId
-        ? this.getLastVisibleDescendentIdOrSelf(
-            node.nullableLastVisibleChildId,
-          )
-        : nodeId
+      return node.maybeLastVisibleChildId
+        .map(lastChildId =>
+          this.getLastVisibleDescendentIdOrSelf(lastChildId),
+        )
+        .getOrElse(nodeId)
     } else {
       return nodeId
     }
@@ -218,10 +218,7 @@ export class Store {
 
     oldParent.removeChildId(this.selectedId)
 
-    grandParent.insertChildIdAt(
-      grandParent.__indexOfChildId(oldParent.id) + 1,
-      this.selectedId,
-    )
+    grandParent.insertNewChildIdAfter(oldParent.id, this.selectedId)
   }
 
   @action.bound
