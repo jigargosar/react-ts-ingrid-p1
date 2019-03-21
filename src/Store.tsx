@@ -4,6 +4,7 @@ import { NodeCollection } from './model/NodeCollection'
 import { Option } from 'fp-ts/lib/Option'
 import { useWindowIsHotKey } from './hooks/useWindowIsHotKey'
 import { useCachedObservable } from './hooks/useCachedObservable'
+import { useMemo } from 'react'
 
 // configure({ enforceActions: 'always', computedRequiresReaction: true })
 
@@ -171,15 +172,18 @@ export function useAppStore() {
     store => store.toJSON(),
   )
 
-  const km = [
-    { key: 'enter', handler: () => store.addNewNode() },
-    { key: 'up', handler: () => store.goPrev() },
-    { key: 'down', handler: () => store.goNext() },
-    { key: 'tab', handler: () => store.indent() },
-    { key: 'shift+tab', handler: () => store.outdent() },
-    { key: 'left', handler: () => store.collapseOrParent() },
-    { key: 'right', handler: () => store.expandOrNext() },
-  ]
+  const km = useMemo(
+    () => [
+      { key: 'enter', handler: () => store.addNewNode() },
+      { key: 'up', handler: () => store.goPrev() },
+      { key: 'down', handler: () => store.goNext() },
+      { key: 'tab', handler: () => store.indent() },
+      { key: 'shift+tab', handler: () => store.outdent() },
+      { key: 'left', handler: () => store.collapseOrParent() },
+      { key: 'right', handler: () => store.expandOrNext() },
+    ],
+    [],
+  )
 
   useWindowIsHotKey(km)
 
