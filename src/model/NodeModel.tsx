@@ -71,12 +71,6 @@ export class NodeModel {
     this.childIds.push(id)
   }
 
-  private __indexOfChildId(childId: string) {
-    const idx = this.childIds.indexOf(childId)
-    ow(idx, ow.number.integer.greaterThanOrEqual(0))
-    return idx
-  }
-
   private indexOfChildId(childId: string) {
     const idx = this.childIds.indexOf(childId)
     ow(idx, ow.number.integer.greaterThanOrEqual(0))
