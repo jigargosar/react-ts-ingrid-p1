@@ -105,6 +105,16 @@ export class Store {
     this.setMaybeSelectedId(maybeId)
   }
 
+  private getLastVisibleDescendentIdOrSelf(nodeId: string): string {
+    return this.maybeNodeWithId(nodeId)
+      .chain(node =>
+        node.maybeLastVisibleChildId.map(lastChildId =>
+          this.getLastVisibleDescendentIdOrSelf(lastChildId),
+        ),
+      )
+      .getOrElse(nodeId)
+  }
+
   @action.bound
   goPrev() {
     const maybeSid = this.nodeCollection
@@ -142,16 +152,6 @@ export class Store {
           newParent.expand()
         })
       })
-  }
-
-  private getLastVisibleDescendentIdOrSelf(nodeId: string): string {
-    return this.maybeNodeWithId(nodeId)
-      .chain(node =>
-        node.maybeLastVisibleChildId.map(lastChildId =>
-          this.getLastVisibleDescendentIdOrSelf(lastChildId),
-        ),
-      )
-      .getOrElse(nodeId)
   }
 
   @action.bound
