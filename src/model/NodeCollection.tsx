@@ -98,7 +98,7 @@ export class NodeCollection {
     return node.childIds.map(child => this.nullableNodeWithId(child))
   }
 
-  public getVisibleChildrenOf(node: NodeModel) {
+  public visibleChildrenOf(node: NodeModel) {
     return node.hasVisibleChildren ? this.childNodesOf(node) : []
   }
 
