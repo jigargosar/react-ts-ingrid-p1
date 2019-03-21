@@ -42,7 +42,7 @@ export class Store {
   }
 
   @action
-  public static fromCache(cachedJSON: any): Store {
+  public static fromNullableJSON(cachedJSON: any): Store {
     return cachedJSON ? Store.fromJSON(cachedJSON) : Store.create()
   }
 
@@ -167,7 +167,7 @@ export class Store {
 export function useAppStore() {
   const store = useCachedObservable(
     'rts-ingrid-p1',
-    Store.fromCache,
+    Store.fromNullableJSON,
     store => store.toJSON(),
   )
 
