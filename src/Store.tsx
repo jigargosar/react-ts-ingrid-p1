@@ -106,9 +106,7 @@ export class Store {
   }
 
   private get maybePrevSiblingIdOfSelected() {
-    return this.maybeParentOfSelected.chain(p =>
-      p.maybePrevChildId(this.selectedId),
-    )
+    return this.nodeCollection.maybePrevSiblingIdOfId(this.selectedId)
   }
 
   @action.bound

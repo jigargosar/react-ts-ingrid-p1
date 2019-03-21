@@ -74,6 +74,10 @@ export class NodeCollection {
     return node.hasVisibleChildren ? this.childNodesOf(node) : []
   }
 
+  public maybePrevSiblingIdOfId(id: string) {
+    return this.maybeParentOfId(id).chain(p => p.maybePrevChildId(id))
+  }
+
   public maybeNextSiblingIdOfId(id: string) {
     return this.maybeParentOfId(id).chain(p => p.maybeNextChildId(id))
   }
