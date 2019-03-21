@@ -113,13 +113,11 @@ export class Store {
 
   @action.bound
   goPrev() {
-    this.setMaybeSelectedId(
-      this.maybePrevSiblingIdOfSelected
-        .map(id => this.getLastVisibleDescendentIdOrSelf(id))
-        .orElse(() =>
-          this.nodeCollection.maybeParentIdOfId(this.selectedId),
-        ),
-    )
+    const maybeSid = this.maybePrevSiblingIdOfSelected
+      .map(id => this.getLastVisibleDescendentIdOrSelf(id))
+      .orElse(() => this.nodeCollection.maybeParentIdOfId(this.selectedId))
+
+    this.setMaybeSelectedId(maybeSid)
   }
 
   @action.bound
