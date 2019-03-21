@@ -3,6 +3,7 @@ import nanoid from 'nanoid'
 import faker from 'faker'
 import ow from 'ow'
 import { none, Option, some } from 'fp-ts/lib/Option'
+import { findIndex } from 'fp-ts/lib/Array'
 
 export type NodeModelJSON = {
   _id: string
@@ -74,6 +75,10 @@ export class NodeModel {
     const idx = this.childIds.indexOf(childId)
     ow(idx, ow.number.integer.greaterThanOrEqual(0))
     return idx
+  }
+
+  private maybeIndexOfChildId(childId: string) {
+    return findIndex(this.childIds, cid => cid === childId)
   }
 
   get childCount() {
