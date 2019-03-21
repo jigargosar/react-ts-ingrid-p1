@@ -167,8 +167,7 @@ export class Store {
 
   @action.bound
   indent() {
-    const maybeNewParent = this.maybePrevSibling
-    maybeNewParent.map(newParent => {
+    this.maybePrevSibling.map(newParent => {
       this.maybeParentOfSelected.map(oldParent => {
         oldParent.removeChildId(this.selectedId)
         newParent.appendNewChildId(this.selectedId)

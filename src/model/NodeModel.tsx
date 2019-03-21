@@ -118,7 +118,7 @@ export class NodeModel {
     return this.childIds.length > 0 ? some(this.childIds[0]) : none
   }
 
-  removeChildId(childId: string) {
+  public removeChildId(childId: string) {
     ow(this.childIds, ow.array.includes(childId))
     const idx = this.childIds.findIndex(cid => cid === childId)
     this.childIds.splice(idx, 1)
