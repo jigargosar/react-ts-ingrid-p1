@@ -70,9 +70,7 @@ export class Store {
   }
 
   private setMaybeSelectedId(maybeSid: Option<string>) {
-    maybeSid.map(sid => {
-      this.selectedId = sid
-    })
+    maybeSid.map(sid => this.setSelectedId(sid))
   }
 
   private get selectedNode(): NodeModel {
