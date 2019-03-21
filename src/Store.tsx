@@ -80,7 +80,7 @@ export class Store {
   }
 
   private get maybeParentOfSelected() {
-    return this.nodeCollection.maybeParentOf(this.selectedNode)
+    return this.nodeCollection.maybeParentOfId(this.selectedId)
   }
 
   public isNodeSelected(node: NodeModel) {
@@ -119,7 +119,7 @@ export class Store {
 
   private get maybeParentIdOfSelected() {
     return this.nodeCollection
-      .maybeParentOf(this.selectedNode)
+      .maybeParentOfId(this.selectedId)
       .map(p => p.id)
   }
 
@@ -188,12 +188,14 @@ export class Store {
 
   @action.bound
   outdent() {
-    this.nodeCollection.maybeParentOf(this.selectedNode).map(oldParent => {
-      this.nodeCollection.maybeParentOf(oldParent).map(grandParent => {
-        oldParent.removeChildId(this.selectedId)
+    this.nodeCollection.maybeParentOfId(this.selectedId).map(oldParent => {
+      this.nodeCollection
+        .maybeParentOfId(oldParent.id)
+        .map(grandParent => {
+          oldParent.removeChildId(this.selectedId)
 
-        grandParent.insertNewChildIdAfter(oldParent.id, this.selectedId)
-      })
+          grandParent.insertNewChildIdAfter(oldParent.id, this.selectedId)
+        })
     })
   }
 

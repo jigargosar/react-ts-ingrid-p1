@@ -66,10 +66,6 @@ export class NodeCollection {
     )
   }
 
-  maybeParentOf(node: NodeModel): Option<NodeModel> {
-    return this.maybeParentOfId(node.id)
-  }
-
   private childNodesOf(node: NodeModel) {
     return node.childIds.map(child => this.nodeWithId(child))
   }
