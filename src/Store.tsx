@@ -117,16 +117,14 @@ export class Store {
       .chain(p => p.maybeNextChildId(id))
   }
 
-  private get maybeParentIdOfSelected() {
-    return this.nodeCollection.maybeParentIdOfId(this.selectedId)
-  }
-
   @action.bound
   goPrev() {
     this.setMaybeSelectedId(
       this.maybePrevSiblingIdOfSelected
         .map(id => this.getLastVisibleDescendentIdOrSelf(id))
-        .orElse(() => this.maybeParentIdOfSelected),
+        .orElse(() =>
+          this.nodeCollection.maybeParentIdOfId(this.selectedId),
+        ),
     )
   }
 
