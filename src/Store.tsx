@@ -126,8 +126,9 @@ export class Store {
   }
 
   private maybeNextSiblingIdOf(node: NodeModel) {
-    const maybeParent = this.nodeCollection.nullableParentOf(node)
-    return maybeParent && maybeParent.nullableNextSiblingId(node.id)
+    return this.nodeCollection
+      .maybeParentOf(node)
+      .chain(p => p.maybeNextChildId(node.id))
   }
 
   private get maybeParentIdOfSelected() {
@@ -152,7 +153,7 @@ export class Store {
   ): Option<string> {
     return fromNullable(this.nodeCollection.maybeParentOfId(nodeId)).chain(
       parent =>
-        fromNullable(this.maybeNextSiblingIdOf(parent)).orElse(() =>
+        this.maybeNextSiblingIdOf(parent).orElse(() =>
           this.maybeNextSiblingIdOfFirstAncestor(parent.id),
         ),
     )

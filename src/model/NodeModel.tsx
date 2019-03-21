@@ -147,12 +147,6 @@ export class NodeModel {
     return this.hasVisibleChildren ? last(this.childIds) : none
   }
 
-  nullableNextSiblingId(childId: string) {
-    const idx = this.__indexOfChildId(childId)
-
-    return idx < this.childCount - 1 ? this.getChildIdAt(idx + 1) : null
-  }
-
   collapse() {
     this.collapsed = true
   }
