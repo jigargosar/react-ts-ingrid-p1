@@ -36,20 +36,16 @@ export class Store {
     return new Store(NodeCollection.fromJSON(json.nodes), json.selectedId)
   }
 
-  @action
-  public static fromCache(cachedJSON: any) {
-    return cachedJSON ? Store.fromJSON(cachedJSON) : Store.create()
-  }
-
-  toJSON() {
+  private toJSON() {
     return {
       nodes: this.nodeCollection.toJSON(),
       selectedId: this.selectedId,
     }
   }
 
-  private registerNode(node: NodeModel) {
-    this.nodeCollection.registerNode(node)
+  @action
+  public static fromCache(cachedJSON: any) {
+    return cachedJSON ? Store.fromJSON(cachedJSON) : Store.create()
   }
 
   public getVisibleChildrenOf(node: NodeModel) {
@@ -84,7 +80,7 @@ export class Store {
   @action.bound
   addNewNode() {
     const newNode = NodeModel.createNew()
-    this.registerNode(newNode)
+    this.nodeCollection.registerNode(newNode)
 
     this.maybeParentOfSelected
       .map(p => p.insertNewChildIdAfter(this.selectedId, newNode.id))
