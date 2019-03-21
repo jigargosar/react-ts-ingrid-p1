@@ -94,12 +94,12 @@ export class NodeCollection {
     return this.rootNode === node
   }
 
-  private getChildNodesOf(node: NodeModel) {
+  private childNodesOf(node: NodeModel) {
     return node.childIds.map(child => this.nullableNodeWithId(child))
   }
 
   public getVisibleChildrenOf(node: NodeModel) {
-    return node.hasVisibleChildren ? this.getChildNodesOf(node) : []
+    return node.hasVisibleChildren ? this.childNodesOf(node) : []
   }
 
   static create() {
