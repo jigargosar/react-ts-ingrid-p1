@@ -221,7 +221,7 @@ type HotKeyMap = {
   handler: (e: KeyboardEvent | void) => void
 }[]
 
-function useHotKeyMap(km: HotKeyMap) {
+function useWindowIsHotKey(km: HotKeyMap) {
   useEffect(() => {
     function kdl(e: KeyboardEvent) {
       km.forEach(({ key, handler }) => {
@@ -258,7 +258,7 @@ export function useAppStore() {
     { key: 'right', handler: () => store.expandOrNext() },
   ]
 
-  useHotKeyMap(km)
+  useWindowIsHotKey(km)
 
   return store
 }
