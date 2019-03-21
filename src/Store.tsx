@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { action, autorun, observable } from 'mobx'
-import isHotkey from 'is-hotkey'
 import { getCached, setCache } from './cache-helpers'
 import { useDisposable } from 'mobx-react-lite'
 import { NodeModel, NodeModelJSON } from './model/NodeModel'
 import { NodeCollection } from './model/NodeCollection'
 import { Option } from 'fp-ts/lib/Option'
+import { useWindowIsHotKey } from './hooks/useWindowIsHotKey'
 
 // configure({ enforceActions: 'always', computedRequiresReaction: true })
 
@@ -214,29 +214,6 @@ export class Store {
       this.goNext()
     }
   }
-}
-
-type HotKeyMap = {
-  key: string | string[]
-  handler: (e: KeyboardEvent | void) => void
-}[]
-
-function useWindowIsHotKey(km: HotKeyMap) {
-  useEffect(() => {
-    function kdl(e: KeyboardEvent) {
-      km.forEach(({ key, handler }) => {
-        if (isHotkey(key, e)) {
-          e.preventDefault()
-          handler()
-        }
-      })
-    }
-
-    window.addEventListener('keydown', kdl)
-    return () => {
-      window.removeEventListener('keydown', kdl)
-    }
-  }, [])
 }
 
 export function useAppStore() {
