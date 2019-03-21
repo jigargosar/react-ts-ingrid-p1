@@ -130,21 +130,18 @@ export class Store {
     this.setMaybeSelectedId(maybeSid)
   }
 
-  private get maybePrevSibling() {
-    return this.nodeCollection
-      .maybePrevSiblingIdOfId(this.selectedId)
-      .chain(sibId => this.nodeCollection.maybeNodeWithId(sibId))
-  }
-
   @action.bound
   indent() {
-    this.maybePrevSibling.map(newParent => {
-      this.maybeParentOfSelected.map(oldParent => {
-        oldParent.removeChildId(this.selectedId)
-        newParent.appendNewChildId(this.selectedId)
-        newParent.expand()
+    this.nodeCollection
+      .maybePrevSiblingIdOfId(this.selectedId)
+      .chain(sibId => this.nodeCollection.maybeNodeWithId(sibId))
+      .map(newParent => {
+        this.maybeParentOfSelected.map(oldParent => {
+          oldParent.removeChildId(this.selectedId)
+          newParent.appendNewChildId(this.selectedId)
+          newParent.expand()
+        })
       })
-    })
   }
 
   private getLastVisibleDescendentIdOrSelf(nodeId: string): string {
