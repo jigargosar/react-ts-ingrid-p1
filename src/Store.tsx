@@ -56,8 +56,12 @@ export class Store {
     return this.nodeCollection.getVisibleChildrenOf(node)
   }
 
-  private maybeNodeWithId(id: string) {
+  private nullableNodeWithId(id: string) {
     return this.nodeCollection.maybeNodeWithId(id)
+  }
+
+  private maybeNodeWithId(id: string) {
+    return fromNullable(this.nullableNodeWithId(id))
   }
 
   public get rootNode() {
@@ -76,7 +80,7 @@ export class Store {
   }
 
   private get selectedNode() {
-    return this.maybeNodeWithId(this.selectedId)
+    return this.nullableNodeWithId(this.selectedId)
   }
 
   private get nullableParentOfSelected() {
@@ -116,9 +120,8 @@ export class Store {
   }
 
   private get maybePrevSiblingIdOfSelected() {
-    return (
-      this.nullableParentOfSelected &&
-      this.nullableParentOfSelected.nullablePrevChildId(this.selectedId)
+    return this.maybeParentOfSelected.chain(p =>
+      p.maybePrevChildId(this.selectedId),
     )
   }
 
@@ -136,7 +139,7 @@ export class Store {
   @action.bound
   goPrev() {
     this.setSelectedId(
-      fromNullable(this.maybePrevSiblingIdOfSelected)
+      this.maybePrevSiblingIdOfSelected
         .map(id => this.getLastVisibleDescendentIdOrSelf(id))
 
         .orElse(() => this.maybeParentIdOfSelected)
@@ -172,25 +175,26 @@ export class Store {
   }
 
   private get maybePrevSibling() {
-    return (
-      this.maybePrevSiblingIdOfSelected &&
-      this.maybeNodeWithId(this.maybePrevSiblingIdOfSelected)
+    return this.maybePrevSiblingIdOfSelected.chain(sibId =>
+      this.maybeNodeWithId(sibId),
     )
   }
 
   @action.bound
   indent() {
-    const oldParent = this.nullableParentOfSelected
-    const newParent = this.maybePrevSibling
-    if (oldParent && newParent) {
-      oldParent.removeChildId(this.selectedId)
-      newParent.appendNewChildId(this.selectedId)
-      newParent.expand()
-    }
+    const maybeNewParent = this.maybePrevSibling
+    maybeNewParent.map(newParent => {
+      const oldParent = this.nullableParentOfSelected
+      if (oldParent && newParent) {
+        oldParent.removeChildId(this.selectedId)
+        newParent.appendNewChildId(this.selectedId)
+        newParent.expand()
+      }
+    })
   }
 
   private getLastVisibleDescendentIdOrSelf(nodeId: string): string {
-    const node = this.maybeNodeWithId(nodeId)
+    const node = this.nullableNodeWithId(nodeId)
     if (node) {
       return node.maybeLastVisibleChildId
         .map(lastChildId =>
