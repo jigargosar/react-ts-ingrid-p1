@@ -33,16 +33,12 @@ export class NodeCollection {
     this.byId[node.id] = node
   }
 
-  nullableNodeWithId(id: string): NodeModel | undefined {
-    return this.byId[id]
-  }
-
   maybeNodeWithId(id: string): Option<NodeModel> {
     return lookup(id, this.byId)
   }
 
   nodeWithId(id: string): NodeModel {
-    const nullableNode = this.nullableNodeWithId(id) as NodeModel
+    const nullableNode = this.byId[id]
     ow(nullableNode, ow.object.instanceOf(NodeModel))
     return nullableNode
   }
