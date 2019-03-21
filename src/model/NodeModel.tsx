@@ -17,7 +17,6 @@ export class NodeModel {
   @observable title: string
   @observable childIds: string[]
   @observable collapsed: boolean
-
   constructor(
     id?: string,
     title?: string,
@@ -106,6 +105,21 @@ export class NodeModel {
     return this.maybeIndexOfChildId(existingChildId).chain(idx =>
       this.maybeChildIdAt(idx - 1),
     )
+  }
+
+  public moveChildIdUp(childId: string): any {
+    const idx = this.indexOfChildId(childId)
+    if (idx > 0) {
+      this.removeChildId(childId)
+      this.insertChildIdAt(idx - 1, childId)
+    }
+  }
+  public moveChildIdDown(childId: string): any {
+    const idx = this.indexOfChildId(childId)
+    if (idx < this.childCount - 1) {
+      this.removeChildId(childId)
+      this.insertChildIdAt(idx + 1, childId)
+    }
   }
 
   public maybeNextChildId(existingChildId: string) {

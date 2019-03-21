@@ -120,6 +120,20 @@ export class Store {
   }
 
   @action.bound
+  moveUp() {
+    this.maybeParentOfSelected.map(p => {
+      p.moveChildIdUp(this.selectedId)
+    })
+  }
+
+  @action.bound
+  moveDown() {
+    this.maybeParentOfSelected.map(p => {
+      p.moveChildIdDown(this.selectedId)
+    })
+  }
+
+  @action.bound
   indent() {
     this.nodeCollection
       .maybePrevSiblingIdOfId(this.selectedId)
