@@ -108,11 +108,6 @@ export class NodeModel {
     this.insertChildIdAt(idx + 1, newChildId)
   }
 
-  public nullablePrevChildId(existingChildId: string) {
-    const idx = this.__indexOfChildId(existingChildId)
-    return idx > 0 ? this.childIds[idx - 1] : null
-  }
-
   public maybePrevChildId(existingChildId: string): Option<string> {
     return this.maybeIndexOfChildId(existingChildId).chain(idx =>
       this.maybeChildIdAt(idx - 1),
@@ -120,9 +115,8 @@ export class NodeModel {
   }
 
   public maybeNextChildId(existingChildId: string) {
-    return this.maybeIndexOfChildId(existingChildId).chain(
-      idx => this.maybeChildIdAt(idx + 1),
-      // idx < this.childCount - 1 ? this.childIds[idx + 1] : null,
+    return this.maybeIndexOfChildId(existingChildId).chain(idx =>
+      this.maybeChildIdAt(idx + 1),
     )
   }
 
