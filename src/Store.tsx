@@ -56,10 +56,6 @@ export class Store {
     return this.nodeCollection.visibleChildNodesOf(node)
   }
 
-  private maybeNodeWithId(id: string) {
-    return this.nodeCollection.maybeNodeWithId(id)
-  }
-
   public get rootNode() {
     return this.nodeCollection.rootNode
   }
