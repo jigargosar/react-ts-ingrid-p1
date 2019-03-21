@@ -36,7 +36,7 @@ export class Store {
     return new Store(NodeCollection.fromJSON(json.nodes), json.selectedId)
   }
 
-  private toJSON() {
+  toJSON() {
     return {
       nodes: this.nodeCollection.toJSON(),
       selectedId: this.selectedId,
