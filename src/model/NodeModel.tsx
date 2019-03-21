@@ -70,7 +70,7 @@ export class NodeModel {
     this.childIds.push(id)
   }
 
-  indexOfChildId(childId: string) {
+  __indexOfChildId(childId: string) {
     const idx = this.childIds.indexOf(childId)
     ow(idx, ow.number.integer.greaterThanOrEqual(0))
     return idx
@@ -89,17 +89,22 @@ export class NodeModel {
     existingChildId: string,
     newChildId: string,
   ) {
-    const idx = this.indexOfChildId(existingChildId)
+    const idx = this.__indexOfChildId(existingChildId)
     this.insertChildIdAt(idx + 1, newChildId)
   }
 
   public nullablePrevChildId(existingChildId: string) {
-    const idx = this.indexOfChildId(existingChildId)
+    const idx = this.__indexOfChildId(existingChildId)
+    return idx > 0 ? this.childIds[idx - 1] : null
+  }
+
+  public maybePrevChildId(existingChildId: string) {
+    const idx = this.__indexOfChildId(existingChildId)
     return idx > 0 ? this.childIds[idx - 1] : null
   }
 
   public maybeNextChildId(existingChildId: string) {
-    const idx = this.indexOfChildId(existingChildId)
+    const idx = this.__indexOfChildId(existingChildId)
     return idx < this.childCount - 1 ? some(this.childIds[idx + 1]) : none
   }
 
@@ -131,7 +136,7 @@ export class NodeModel {
   }
 
   nullableNextSiblingId(childId: string) {
-    const idx = this.indexOfChildId(childId)
+    const idx = this.__indexOfChildId(childId)
 
     return idx < this.childCount - 1 ? this.getChildIdAt(idx + 1) : null
   }

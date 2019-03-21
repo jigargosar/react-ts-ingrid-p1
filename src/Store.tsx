@@ -219,7 +219,7 @@ export class Store {
     oldParent.removeChildId(this.selectedId)
 
     grandParent.insertChildIdAt(
-      grandParent.indexOfChildId(oldParent.id) + 1,
+      grandParent.__indexOfChildId(oldParent.id) + 1,
       this.selectedId,
     )
   }
