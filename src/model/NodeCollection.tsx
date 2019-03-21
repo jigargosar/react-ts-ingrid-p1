@@ -56,7 +56,7 @@ export class NodeCollection {
     }, {})
   }
 
-  private maybeParentIdOfId(nodeId: string) {
+  maybeParentIdOfId(nodeId: string) {
     return lookup(nodeId, this.idToPidLookup)
   }
 

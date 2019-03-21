@@ -118,9 +118,7 @@ export class Store {
   }
 
   private get maybeParentIdOfSelected() {
-    return this.nodeCollection
-      .maybeParentOfId(this.selectedId)
-      .map(p => p.id)
+    return this.nodeCollection.maybeParentIdOfId(this.selectedId)
   }
 
   @action.bound
