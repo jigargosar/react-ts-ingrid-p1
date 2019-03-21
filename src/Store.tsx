@@ -152,7 +152,7 @@ export class Store {
 
   @action.bound
   goNext() {
-    const sid = this.selectedNode.maybeFirstVisibleChildId
+    const maybeSid = this.selectedNode.maybeFirstVisibleChildId
       .orElse(() =>
         this.maybeParentOfSelected.chain(parent =>
           parent.maybeNextChildId(this.selectedId),
@@ -162,8 +162,7 @@ export class Store {
         this.maybeNextSiblingIdOfFirstAncestor(this.selectedId),
       )
 
-      .getOrElse(this.selectedId)
-    this.setSelectedId(sid)
+    this.setMaybeSelectedId(maybeSid)
   }
 
   private get maybePrevSibling() {
