@@ -79,12 +79,8 @@ export class Store {
     })
   }
 
-  private get selectedNode() {
-    return this.nullableNodeWithId(this.selectedId)
-  }
-
-  private get nullableParentOfSelected() {
-    return this.nodeCollection.nullableParentOf(this.selectedNode)
+  private get selectedNode(): NodeModel {
+    return this.nodeCollection.nodeWithId(this.selectedId)
   }
 
   private get maybeParentOfSelected() {
@@ -132,9 +128,9 @@ export class Store {
   }
 
   private get maybeParentIdOfSelected() {
-    return fromNullable(
-      this.nodeCollection.nullableParentOf(this.selectedNode),
-    ).map(p => p.id)
+    return this.nodeCollection
+      .maybeParentOf(this.selectedNode)
+      .map(p => p.id)
   }
 
   @action.bound
@@ -151,13 +147,13 @@ export class Store {
   private maybeNextSiblingIdOfFirstAncestor(
     nodeId: string,
   ): Option<string> {
-    return fromNullable(
-      this.nodeCollection.nullableParentOfId(nodeId),
-    ).chain(parent =>
-      this.maybeNextSiblingIdOf(parent).orElse(() =>
-        this.maybeNextSiblingIdOfFirstAncestor(parent.id),
-      ),
-    )
+    return this.nodeCollection
+      .maybeParentOfId(nodeId)
+      .chain(parent =>
+        this.maybeNextSiblingIdOf(parent).orElse(() =>
+          this.maybeNextSiblingIdOfFirstAncestor(parent.id),
+        ),
+      )
   }
 
   @action.bound
@@ -186,12 +182,11 @@ export class Store {
   indent() {
     const maybeNewParent = this.maybePrevSibling
     maybeNewParent.map(newParent => {
-      const oldParent = this.nullableParentOfSelected
-      if (oldParent && newParent) {
+      this.maybeParentOfSelected.map(oldParent => {
         oldParent.removeChildId(this.selectedId)
         newParent.appendNewChildId(this.selectedId)
         newParent.expand()
-      }
+      })
     })
   }
 
@@ -210,21 +205,13 @@ export class Store {
 
   @action.bound
   outdent() {
-    if (
-      this.isSelectedNodeRoot ||
-      this.rootNode ===
-        this.nodeCollection.nullableParentOf(this.selectedNode)
-    )
-      return
+    this.nodeCollection.maybeParentOf(this.selectedNode).map(oldParent => {
+      this.nodeCollection.maybeParentOf(oldParent).map(grandParent => {
+        oldParent.removeChildId(this.selectedId)
 
-    const oldParent = this.nodeCollection.nullableParentOf(
-      this.selectedNode,
-    )
-    const grandParent = this.nodeCollection.nullableParentOf(oldParent)
-
-    oldParent.removeChildId(this.selectedId)
-
-    grandParent.insertNewChildIdAfter(oldParent.id, this.selectedId)
+        grandParent.insertNewChildIdAfter(oldParent.id, this.selectedId)
+      })
+    })
   }
 
   @action.bound

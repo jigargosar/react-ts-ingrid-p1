@@ -44,9 +44,9 @@ export class NodeCollection {
   }
 
   nodeWithId(id: string): NodeModel {
-    const nullableNode = this.nullableNodeWithId(id)
-    ow(nullableNode, ow.undefined.not)
-    return nullableNode as NodeModel
+    const nullableNode = this.nullableNodeWithId(id) as NodeModel
+    ow(nullableNode, ow.object.instanceOf(NodeModel))
+    return nullableNode
   }
 
   public get rootNode() {
@@ -71,10 +71,6 @@ export class NodeCollection {
     return strMap.lookup(nodeId, this.idToPidLookup)
   }
 
-  nullableParentOf(node: NodeModel) {
-    return this.nullableParentOfId(node.id)
-  }
-
   maybeParentOfId(nodeId: string) {
     return this.maybeParentIdOfId(nodeId).chain(id =>
       this.maybeNodeWithId(id),
@@ -85,17 +81,12 @@ export class NodeCollection {
     return this.maybeParentOfId(node.id)
   }
 
-  nullableParentOfId(nodeId: string) {
-    const pid = this.nullableParentIdOfId(nodeId)
-    return pid && this.nullableNodeWithId(pid)
-  }
-
   isRootNode(node: NodeModel) {
     return this.rootNode === node
   }
 
   private childNodesOf(node: NodeModel) {
-    return node.childIds.map(child => this.nullableNodeWithId(child))
+    return node.childIds.map(child => this.nodeWithId(child))
   }
 
   public visibleChildNodesOf(node: NodeModel) {
