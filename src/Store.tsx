@@ -134,7 +134,6 @@ export class Store {
     this.setSelectedId(
       this.maybePrevSiblingIdOfSelected
         .map(id => this.getLastVisibleDescendentIdOrSelf(id))
-
         .orElse(() => this.maybeParentIdOfSelected)
         .getOrElse(this.selectedId),
     )
