@@ -31,7 +31,7 @@ export class NodeCollection {
     this.byId[node.id] = node
   }
 
-  maybeNodeWithId(id: string) {
+  nullableNodeWithId(id: string) {
     return this.byId[id]
   }
 
@@ -62,7 +62,7 @@ export class NodeCollection {
 
   maybeParentOfId(nodeId: string) {
     const pid = this.maybeParentIdOfId(nodeId)
-    return pid && this.maybeNodeWithId(pid)
+    return pid && this.nullableNodeWithId(pid)
   }
 
   isRootNode(node: NodeModel) {
@@ -70,7 +70,7 @@ export class NodeCollection {
   }
 
   private getChildNodesOf(node: NodeModel) {
-    return node.childIds.map(child => this.maybeNodeWithId(child))
+    return node.childIds.map(child => this.nullableNodeWithId(child))
   }
 
   public getVisibleChildrenOf(node: NodeModel) {

@@ -57,7 +57,7 @@ export class Store {
   }
 
   private nullableNodeWithId(id: string) {
-    return this.nodeCollection.maybeNodeWithId(id)
+    return this.nodeCollection.nullableNodeWithId(id)
   }
 
   private maybeNodeWithId(id: string) {
