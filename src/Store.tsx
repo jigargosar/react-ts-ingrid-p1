@@ -44,7 +44,7 @@ export class Store {
   }
 
   @action
-  public static fromCache(cachedJSON: any) {
+  public static fromCache(cachedJSON: any): Store {
     return cachedJSON ? Store.fromJSON(cachedJSON) : Store.create()
   }
 
@@ -166,15 +166,27 @@ export class Store {
   }
 }
 
-export function useAppStore() {
-  const [store] = useState(() =>
-    Store.fromCache(getCached('rts-ingrid-p1')),
-  )
+function useCachedObservable<T>(
+  cacheKey: string,
+  fromJSON: (json: any) => T,
+  toJSON: (store: T) => any,
+): T {
+  const [store] = useState(() => fromJSON(getCached(cacheKey)))
   useDisposable(() =>
     autorun(() => {
-      setCache('rts-ingrid-p1', store.toJSON())
+      setCache(cacheKey, toJSON(store))
     }),
   )
+  return store
+}
+
+export function useAppStore() {
+  const store = useCachedObservable(
+    'rts-ingrid-p1',
+    Store.fromCache,
+    store => store.toJSON(),
+  )
+
   const km = [
     { key: 'enter', handler: () => store.addNewNode() },
     { key: 'up', handler: () => store.goPrev() },
