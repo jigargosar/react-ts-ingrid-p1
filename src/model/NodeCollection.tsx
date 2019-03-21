@@ -70,10 +70,6 @@ export class NodeCollection {
     return this.maybeParentOfId(node.id)
   }
 
-  isRootNode(node: NodeModel) {
-    return this.rootNode === node
-  }
-
   private childNodesOf(node: NodeModel) {
     return node.childIds.map(child => this.nodeWithId(child))
   }
