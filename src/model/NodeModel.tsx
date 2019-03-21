@@ -120,11 +120,6 @@ export class NodeModel {
     )
   }
 
-  getChildIdAt(idx: number) {
-    ow(idx, ow.number.integer.greaterThanOrEqual(0))
-    return this.childIds[idx]
-  }
-
   get maybeFirstChildId() {
     return this.childIds.length > 0 ? some(this.childIds[0]) : none
   }
