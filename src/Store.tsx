@@ -5,7 +5,7 @@ import { getCached, setCache } from './cache-helpers'
 import { useDisposable } from 'mobx-react-lite'
 import { NodeModel, NodeModelJSON } from './model/NodeModel'
 import { NodeCollection } from './model/NodeCollection'
-import { fromNullable, Option } from 'fp-ts/lib/Option'
+import { Option } from 'fp-ts/lib/Option'
 
 // configure({ enforceActions: 'always', computedRequiresReaction: true })
 
@@ -98,9 +98,7 @@ export class Store {
 
     this.maybeParentOfSelected
       .map(p => p.insertNewChildIdAfter(this.selectedId, newNode.id))
-      .orElse(() =>
-        fromNullable(this.selectedNode.appendNewChildId(newNode.id)),
-      )
+      .getOrElseL(() => this.selectedNode.appendNewChildId(newNode.id))
 
     this.setSelectedId(newNode.id)
   }
