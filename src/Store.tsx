@@ -56,12 +56,8 @@ export class Store {
     return this.nodeCollection.visibleChildNodesOf(node)
   }
 
-  private nullableNodeWithId(id: string) {
-    return this.nodeCollection.nullableNodeWithId(id)
-  }
-
   private maybeNodeWithId(id: string) {
-    return fromNullable(this.nullableNodeWithId(id))
+    return this.nodeCollection.maybeNodeWithId(id)
   }
 
   public get rootNode() {
@@ -174,7 +170,7 @@ export class Store {
 
   private get maybePrevSibling() {
     return this.maybePrevSiblingIdOfSelected.chain(sibId =>
-      this.maybeNodeWithId(sibId),
+      this.nodeCollection.maybeNodeWithId(sibId),
     )
   }
 
@@ -191,16 +187,15 @@ export class Store {
   }
 
   private getLastVisibleDescendentIdOrSelf(nodeId: string): string {
-    const node = this.nullableNodeWithId(nodeId)
-    if (node) {
-      return node.maybeLastVisibleChildId
-        .map(lastChildId =>
+    const node = this.maybeNodeWithId(nodeId)
+
+    return this.maybeNodeWithId(nodeId)
+      .chain(node =>
+        node.maybeLastVisibleChildId.map(lastChildId =>
           this.getLastVisibleDescendentIdOrSelf(lastChildId),
-        )
-        .getOrElse(nodeId)
-    } else {
-      return nodeId
-    }
+        ),
+      )
+      .getOrElse(nodeId)
   }
 
   @action.bound
