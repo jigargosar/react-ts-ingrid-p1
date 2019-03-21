@@ -111,10 +111,10 @@ export class Store {
     )
   }
 
-  private maybeNextSiblingIdOf(node: NodeModel) {
+  private maybeNextSiblingIdOfId(id: string) {
     return this.nodeCollection
-      .maybeParentOfId(node.id)
-      .chain(p => p.maybeNextChildId(node.id))
+      .maybeParentOfId(id)
+      .chain(p => p.maybeNextChildId(id))
   }
 
   private get maybeParentIdOfSelected() {
@@ -134,10 +134,10 @@ export class Store {
     nodeId: string,
   ): Option<string> {
     return this.nodeCollection
-      .maybeParentOfId(nodeId)
-      .chain(parent =>
-        this.maybeNextSiblingIdOf(parent).orElse(() =>
-          this.maybeNextSiblingIdOfFirstAncestor(parent.id),
+      .maybeParentIdOfId(nodeId)
+      .chain(parentId =>
+        this.maybeNextSiblingIdOfId(parentId).orElse(() =>
+          this.maybeNextSiblingIdOfFirstAncestor(parentId),
         ),
       )
   }
