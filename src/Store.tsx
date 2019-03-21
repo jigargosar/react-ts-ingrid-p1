@@ -105,21 +105,11 @@ export class Store {
     this.setMaybeSelectedId(maybeId)
   }
 
-  private getLastVisibleDescendentIdOrSelf(nodeId: string): string {
-    return this.maybeNodeWithId(nodeId)
-      .chain(node =>
-        node.maybeLastVisibleChildId.map(lastChildId =>
-          this.getLastVisibleDescendentIdOrSelf(lastChildId),
-        ),
-      )
-      .getOrElse(nodeId)
-  }
-
   @action.bound
   goPrev() {
     const maybeSid = this.nodeCollection
       .maybePrevSiblingIdOfId(this.selectedId)
-      .map(id => this.getLastVisibleDescendentIdOrSelf(id))
+      .map(id => this.nodeCollection.lastVisibleDescendentIdOrSelf(id))
       .orElse(() => this.nodeCollection.maybeParentIdOfId(this.selectedId))
 
     this.setMaybeSelectedId(maybeSid)

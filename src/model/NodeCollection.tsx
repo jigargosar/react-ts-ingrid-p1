@@ -92,6 +92,16 @@ export class NodeCollection {
     )
   }
 
+  public lastVisibleDescendentIdOrSelf(nodeId: string): string {
+    return this.maybeNodeWithId(nodeId)
+      .chain(node =>
+        node.maybeLastVisibleChildId.map(lastChildId =>
+          this.lastVisibleDescendentIdOrSelf(lastChildId),
+        ),
+      )
+      .getOrElse(nodeId)
+  }
+
   static create() {
     const nodeCollection = new NodeCollection({})
     nodeCollection.registerNode(NodeModel.getOrCreateRootNode())
