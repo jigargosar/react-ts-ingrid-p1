@@ -1,11 +1,9 @@
-import { useState } from 'react'
-import { action, autorun, observable } from 'mobx'
-import { getCached, setCache } from './cache-helpers'
-import { useDisposable } from 'mobx-react-lite'
+import { action, observable } from 'mobx'
 import { NodeModel, NodeModelJSON } from './model/NodeModel'
 import { NodeCollection } from './model/NodeCollection'
 import { Option } from 'fp-ts/lib/Option'
 import { useWindowIsHotKey } from './hooks/useWindowIsHotKey'
+import { useCachedObservable } from './hooks/useCachedObservable'
 
 // configure({ enforceActions: 'always', computedRequiresReaction: true })
 
@@ -164,20 +162,6 @@ export class Store {
       this.goNext()
     }
   }
-}
-
-function useCachedObservable<T>(
-  cacheKey: string,
-  fromJSON: (json: any) => T,
-  toJSON: (store: T) => any,
-): T {
-  const [store] = useState(() => fromJSON(getCached(cacheKey)))
-  useDisposable(() =>
-    autorun(() => {
-      setCache(cacheKey, toJSON(store))
-    }),
-  )
-  return store
 }
 
 export function useAppStore() {
