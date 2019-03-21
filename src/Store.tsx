@@ -113,7 +113,7 @@ export class Store {
 
   private maybeNextSiblingIdOf(node: NodeModel) {
     return this.nodeCollection
-      .maybeParentOf(node)
+      .maybeParentOfId(node.id)
       .chain(p => p.maybeNextChildId(node.id))
   }
 
