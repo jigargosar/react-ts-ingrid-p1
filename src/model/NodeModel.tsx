@@ -3,7 +3,7 @@ import nanoid from 'nanoid'
 import faker from 'faker'
 import ow from 'ow'
 import { none, Option, some } from 'fp-ts/lib/Option'
-import { findIndex, lookup } from 'fp-ts/lib/Array'
+import { findIndex, last, lookup } from 'fp-ts/lib/Array'
 
 export type NodeModelJSON = {
   _id: string
@@ -121,7 +121,7 @@ export class NodeModel {
 
   public maybeNextChildId(existingChildId: string) {
     return this.maybeIndexOfChildId(existingChildId).chain(
-      idx => lookup(idx + 1, this.childIds),
+      idx => this.maybeChildIdAt(idx + 1),
       // idx < this.childCount - 1 ? this.childIds[idx + 1] : null,
     )
   }
@@ -151,6 +151,10 @@ export class NodeModel {
 
   get nullableLastVisibleChildId() {
     return this.hasVisibleChildren && this.childIds[this.childCount - 1]
+  }
+
+  get maybeLastVisibleChildId() {
+    return this.hasVisibleChildren ? last(this.childIds) : none
   }
 
   nullableNextSiblingId(childId: string) {
