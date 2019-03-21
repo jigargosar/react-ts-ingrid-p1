@@ -83,10 +83,6 @@ export class Store {
     return this.nodeCollection.maybeParentOf(this.selectedNode)
   }
 
-  private get isSelectedNodeRoot() {
-    return this.nodeCollection.isRootNode(this.selectedNode)
-  }
-
   public isNodeSelected(node: NodeModel) {
     return node.id === this.selectedId
   }
@@ -182,8 +178,6 @@ export class Store {
   }
 
   private getLastVisibleDescendentIdOrSelf(nodeId: string): string {
-    const node = this.maybeNodeWithId(nodeId)
-
     return this.maybeNodeWithId(nodeId)
       .chain(node =>
         node.maybeLastVisibleChildId.map(lastChildId =>
