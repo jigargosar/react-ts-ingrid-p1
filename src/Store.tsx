@@ -1,4 +1,4 @@
-import { action, observable } from 'mobx'
+import { action, configure, observable } from 'mobx'
 import { NodeModel, NodeModelJSON } from './model/NodeModel'
 import { NodeCollection } from './model/NodeCollection'
 import { Option } from 'fp-ts/lib/Option'
@@ -6,7 +6,7 @@ import { useWindowIsHotKey } from './hooks/useWindowIsHotKey'
 import { useCachedObservable } from './hooks/useCachedObservable'
 import { useMemo } from 'react'
 
-// configure({ enforceActions: 'always', computedRequiresReaction: true })
+configure({ enforceActions: 'always', computedRequiresReaction: true })
 
 type StoreJSON = {
   nodes: NodeModelJSON[]
