@@ -216,27 +216,14 @@ export class Store {
   }
 }
 
-export function useAppStore() {
-  const [store] = useState(() =>
-    Store.fromCache(getCached('rts-ingrid-p1')),
-  )
-  useDisposable(() =>
-    autorun(() => {
-      setCache('rts-ingrid-p1', store.toJSON())
-    }),
-  )
+type HotKeyMap = {
+  key: string | string[]
+  handler: (e: KeyboardEvent | void) => void
+}[]
+
+function useHotKeyMap(km: HotKeyMap) {
   useEffect(() => {
     function kdl(e: KeyboardEvent) {
-      const km = [
-        { key: 'enter', handler: () => store.addNewNode() },
-        { key: 'up', handler: () => store.goPrev() },
-        { key: 'down', handler: () => store.goNext() },
-        { key: 'tab', handler: () => store.indent() },
-        { key: 'shift+tab', handler: () => store.outdent() },
-        { key: 'left', handler: () => store.collapseOrParent() },
-        { key: 'right', handler: () => store.expandOrNext() },
-      ]
-
       km.forEach(({ key, handler }) => {
         if (isHotkey(key, e)) {
           e.preventDefault()
@@ -250,5 +237,28 @@ export function useAppStore() {
       window.removeEventListener('keydown', kdl)
     }
   }, [])
+}
+
+export function useAppStore() {
+  const [store] = useState(() =>
+    Store.fromCache(getCached('rts-ingrid-p1')),
+  )
+  useDisposable(() =>
+    autorun(() => {
+      setCache('rts-ingrid-p1', store.toJSON())
+    }),
+  )
+  const km = [
+    { key: 'enter', handler: () => store.addNewNode() },
+    { key: 'up', handler: () => store.goPrev() },
+    { key: 'down', handler: () => store.goNext() },
+    { key: 'tab', handler: () => store.indent() },
+    { key: 'shift+tab', handler: () => store.outdent() },
+    { key: 'left', handler: () => store.collapseOrParent() },
+    { key: 'right', handler: () => store.expandOrNext() },
+  ]
+
+  useHotKeyMap(km)
+
   return store
 }
