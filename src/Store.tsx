@@ -118,13 +118,13 @@ export class Store {
   private get maybePrevSiblingIdOfSelected() {
     return (
       this.nullableParentOfSelected &&
-      this.nullableParentOfSelected.maybePrevChildId(this.selectedId)
+      this.nullableParentOfSelected.nullablePrevChildId(this.selectedId)
     )
   }
 
   private maybeNextSiblingIdOf(node: NodeModel) {
     const maybeParent = this.nodeCollection.nullableParentOf(node)
-    return maybeParent && maybeParent.maybeNextSiblingId(node.id)
+    return maybeParent && maybeParent.nullableNextSiblingId(node.id)
   }
 
   private get maybeParentIdOfSelected() {
@@ -192,9 +192,9 @@ export class Store {
   private getLastVisibleDescendentIdOrSelf(nodeId: string): string {
     const node = this.maybeNodeWithId(nodeId)
     if (node) {
-      return node.maybeLastVisibleChildId
+      return node.nullableLastVisibleChildId
         ? this.getLastVisibleDescendentIdOrSelf(
-            node.maybeLastVisibleChildId,
+            node.nullableLastVisibleChildId,
           )
         : nodeId
     } else {

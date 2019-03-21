@@ -2,7 +2,7 @@ import { observable } from 'mobx'
 import nanoid from 'nanoid'
 import faker from 'faker'
 import ow from 'ow'
-import { none, some } from 'fp-ts/lib/Option'
+import { none, Option, some } from 'fp-ts/lib/Option'
 
 export type NodeModelJSON = {
   _id: string
@@ -93,7 +93,7 @@ export class NodeModel {
     this.insertChildIdAt(idx + 1, newChildId)
   }
 
-  public maybePrevChildId(existingChildId: string) {
+  public nullablePrevChildId(existingChildId: string) {
     const idx = this.indexOfChildId(existingChildId)
     return idx > 0 ? this.childIds[idx - 1] : null
   }
@@ -126,11 +126,11 @@ export class NodeModel {
     return this.hasChildren && !this.collapsed
   }
 
-  get maybeLastVisibleChildId() {
+  get nullableLastVisibleChildId() {
     return this.hasVisibleChildren && this.childIds[this.childCount - 1]
   }
 
-  maybeNextSiblingId(childId: string) {
+  nullableNextSiblingId(childId: string) {
     const idx = this.indexOfChildId(childId)
 
     return idx < this.childCount - 1 ? this.getChildIdAt(idx + 1) : null
@@ -152,7 +152,7 @@ export class NodeModel {
     return this.hasChildren && this.collapsed
   }
 
-  public get maybeFirstVisibleChildId() {
+  public get maybeFirstVisibleChildId(): Option<string> {
     return this.hasVisibleChildren ? this.maybeFirstChildId : none
   }
 }
