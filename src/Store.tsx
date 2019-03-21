@@ -53,7 +53,7 @@ export class Store {
   }
 
   public getVisibleChildrenOf(node: NodeModel) {
-    return this.nodeCollection.visibleChildrenOf(node)
+    return this.nodeCollection.visibleChildNodesOf(node)
   }
 
   private nullableNodeWithId(id: string) {
