@@ -3,8 +3,6 @@ import { NodeModel, NodeModelJSON } from './NodeModel'
 import { Option } from 'fp-ts/lib/Option'
 import ow from 'ow'
 import { lookup } from 'fp-ts/lib/Record'
-import * as strMap from 'fp-ts/lib/StrMap'
-import { StrMap } from 'fp-ts/lib/StrMap'
 
 export class NodeCollection {
   @observable byId: { [index: string]: NodeModel }
@@ -53,7 +51,7 @@ export class NodeCollection {
     return this.nodeWithId(NodeModel.rootNodeId)
   }
 
-  private get idToPidLookup(): StrMap<string> {
+  private get idToPidLookup(): Record<string, string> {
     return values(this.byId).reduce((acc, node) => {
       node.childIds.forEach((cid: string) => {
         acc[cid] = node.id
@@ -62,13 +60,8 @@ export class NodeCollection {
     }, {})
   }
 
-  private nullableParentIdOfId(nodeId: string): string | undefined {
-    // @ts-ignore
-    return this.idToPidLookup[nodeId]
-  }
-
   private maybeParentIdOfId(nodeId: string) {
-    return strMap.lookup(nodeId, this.idToPidLookup)
+    return lookup(nodeId, this.idToPidLookup)
   }
 
   maybeParentOfId(nodeId: string) {
